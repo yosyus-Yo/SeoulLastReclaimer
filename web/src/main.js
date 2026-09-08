@@ -9,7 +9,10 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { SAOPass } from 'three/addons/postprocessing/SAOPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { makeWorld } from './world.js';
-import { initialState, tick, nearby, interact, shield, dash } from './simulation.js';
+import { initialState, tick, nearby, interact, shield, dash, jump } from './simulation.js';
+import { recoverPosition } from './collision-world.js';
+import { SimulationClock } from './simulation-clock.js';
+import { traversalNearby, interactTraversal, releaseClimb, insideBuilding } from './traversal.js';
 import { findPath, followPath } from './navigation.js';
 import { attack, facePoint, updateCombat } from './combat.js';
 import { createCombatView } from './combat-view.js';
@@ -25,6 +28,7 @@ let graphics = graphicsOptions();
 try { graphics = graphicsOptions(JSON.parse(localStorage.getItem('slr.graphics.v1'))); } catch { /* Optional preferences. */ }
 $('quality').value = graphics.quality; $('frame-limit').value = String(graphics.fps);
 const pacer = new FramePacer();
+const simulationClock = new SimulationClock();
 const scene = new THREE.Scene();
 const state = initialState('plaza', true);
 let campaign = newCampaign(), saveBlocked = false;
@@ -63,6 +67,10 @@ const keys = new Set();
 const settings = $('settings');
 const defeat = $('defeat');
 const journal = $('journal'), returnDialog = $('return-dialog'), resultDialog = $('mission-result');
+const trainingEntry = document.createElement('button');
+trainingEntry.id = 'training-start'; trainingEntry.className = 'training-entry';
+trainingEntry.textContent = '이동 훈련장 · 점프 / 실내 / 외벽 등반';
+journal.querySelector('.credits').before(trainingEntry);
 const designsDialog = $('npc-designs');
 let journalNpc = null;
 const npcDialogues = {
@@ -103,7 +111,7 @@ function drawMap() {
   const z = zoneFor(state.zone), b = z.bounds;
   const pos = p => ({ x: 10 + (p.x - b.minX) / (b.maxX - b.minX) * 130, y: 10 + (p.z - b.minZ) / (b.maxZ - b.minZ) * 140 });
   let svg = '<rect x="10" y="10" width="130" height="140" fill="#87968a20" stroke="#c3d7b744"/>';
-  for (const o of z.obstacles) { const p = pos({ x: o.x - o.w / 2, z: o.z - o.d / 2 }); svg += `<rect class="map-buildings" x="${p.x}" y="${p.y}" width="${o.w / (b.maxX - b.minX) * 130}" height="${o.d / (b.maxZ - b.minZ) * 140}"/>`; }
+  for (const o of [...z.obstacles, ...(z.platforms || [])]) { const p = pos({ x: o.x - o.w / 2, z: o.z - o.d / 2 }); svg += `<rect class="map-buildings" x="${p.x}" y="${p.y}" width="${o.w / (b.maxX - b.minX) * 130}" height="${o.d / (b.maxZ - b.minZ) * 140}"/>`; }
   z.nodes.forEach((n, i) => { const p = pos(n); svg += `<circle class="map-node" id="map-node-${i}" cx="${p.x}" cy="${p.y}" r="3"/>`; });
   for (const n of z.npcs) { const p = pos(n); svg += `<circle cx="${p.x}" cy="${p.y}" r="3" fill="#e6d8a2"/>`; }
   for (const q of sideQuests) if (q.zone === z.id && campaign.sideAccepted.includes(q.id)) for (const item of q.points) if (!campaign.pickups.includes(item.id)) { const p = pos(item); svg += `<rect x="${p.x-2}" y="${p.y-2}" width="4" height="4" fill="#b9d995"/>`; }
@@ -112,8 +120,10 @@ function drawMap() {
   $('district-name').textContent = z.name; $('region-label').textContent = 'SEOUL / ' + z.name;
   $('mission-zone').textContent = z.safe ? z.name + ' · 안전 구역' : z.subtitle;
   $('mission').classList.toggle('is-hub', z.safe);
+  $('mission').classList.toggle('is-training', !!z.training);
   $('mission').setAttribute('aria-label', z.safe ? '광장 안내' : '현재 현장 목표');
-  canvas.setAttribute('aria-label', `${z.name} 3D 화면. 우클릭 또는 WASD 이동, 좌클릭 공격, E 상호작용, Q 방어·지지점 설치, J 임무 목록.`);
+  $('training-controls').hidden = !z.training;
+  canvas.setAttribute('aria-label', `${z.name} 3D 화면. 우클릭 또는 WASD 이동, Space 점프, C 회피, 좌클릭 공격, E 상호작용, Q 방어·지지점 설치, J 임무 목록.`);
 }
 function openJournal(npc = null) {
   if (!ready || state.dead) return;
@@ -126,6 +136,7 @@ function openJournal(npc = null) {
   if (design) { $('npc-portrait').src = design.image; $('npc-portrait').alt = design.name + ' 캐릭터 디자인'; $('npc-profile').textContent = `${design.age}세 · ${design.role}`; }
   else $('npc-portrait').removeAttribute('src');
   $('credits').textContent = campaign.credits + ' C';
+  $('training-start').disabled = state.zone !== 'plaza';
   $('mission-list').innerHTML = missions.map(m => {
     const atHub = state.zone === 'plaza', unlocked = available(campaign, m.id);
     return `<article class="mission-card"><p>${m.id} · ${m.giver}</p><h3>${m.name}</h3><div class="card-description" tabindex="0" aria-label="${m.name} 설명">${m.brief}</div><footer><span>${m.credits} C · ${m.rescued ? m.rescued + '명 구조' : '원본 3개 확보'}</span><div class="card-actions"><button data-deploy="${m.zone}" aria-label="${m.name} 출동" ${atHub && unlocked ? '' : 'disabled'}>${!atHub ? '광장에서 출동' : campaign.completed.includes(m.id) ? '재출동' : unlocked ? '출동' : m.requires + ' 완료 후'}</button><button data-preview="${m.zone}" aria-label="${zoneFor(m.zone).name} 둘러보기" ${atHub ? '' : 'disabled'}>둘러보기</button></div></footer></article>`;
@@ -143,6 +154,7 @@ function requestReturn() {
   if (state.complete || state.exploring) enterZone('plaza'); else returnDialog.showModal();
 }
 function currentInteraction() {
+  const traversal = traversalNearby(state); if (traversal) return traversal;
   const basic = nearby(state), story = storyNearby(state, campaign);
   if (!basic) return story; if (!story) return basic;
   const p = interactionPosition(basic);
@@ -153,6 +165,8 @@ function interactionPosition(t) {
   return t.x !== undefined ? t : t.kind === 'node' ? z.nodes[t.index] : t.kind === 'aid' ? z.aid : z.anchor;
 }
 function performInteraction() {
+  const traversal = interactTraversal(state);
+  if (traversal) { cancelMove(); keys.clear(); attacking = false; toast(traversal.message); return; }
   const target = currentInteraction();
   if (!target) { toast('표시된 대상 가까이에서 E를 누르세요.'); return; }
   if (['npc', 'board', 'return', 'finish', 'charge', 'questItem'].includes(target.kind)) {
@@ -187,6 +201,21 @@ $('npc-designs-close').addEventListener('click', () => designsDialog.close());
 $('journal-close').addEventListener('click', () => journal.close());
 journal.addEventListener('close', () => { keys.clear(); cancelMove(); attacking = false; canvas.focus(); });
 $('hub-return').addEventListener('click', requestReturn);
+$('training-start').addEventListener('click', () => { if (state.zone === 'plaza') { journal.close(); enterZone('training', true); } });
+$('training-reset').addEventListener('click', () => { if (state.zone === 'training') enterZone('training', true); });
+for (const [id, goal] of [['walk-to-building', { x: 20, z: 8.3 }], ['walk-to-climb', { x: 12.8, z: 0 }]]) $(id).addEventListener('click', () => {
+  if (state.zone !== 'training' || state.dead || state.climb) return;
+  const route = findPath(state, goal); path.splice(0, path.length, ...route); attacking = false; keys.clear(); canvas.focus();
+  toast(route.length ? '표시된 입구로 이동합니다. 도착 후 E를 누르세요.' : '지상으로 내려오거나 문을 열어 이동 경로를 확보해 주세요.');
+});
+$('fall-practice').addEventListener('click', () => {
+  if (state.zone !== 'training' || state.dead) return;
+  const p = zones.training.platforms.find(p => p.id === 'step-8');
+  recoverPosition(state); Object.assign(state, { x: p.x, y: p.height, z: p.z, fallPeak: p.height, supportId: p.id, dx: 1, dz: 0, landingEvent: null });
+  cancelMove(); keys.clear(); attacking = false; canvas.focus();
+  toast('4.8m 발판입니다. C로 앞쪽 회피하거나 WASD로 가장자리를 넘어가 낙하 피해를 확인하세요.');
+});
+$('safe-return').addEventListener('click', () => { if (state.zone === 'training' && !state.dead) { recoverPosition(state); cancelMove(); keys.clear(); attacking = false; toast('마지막 안전한 지상 위치로 돌아왔습니다. 체력은 유지됩니다.'); canvas.focus(); } });
 $('return-cancel').addEventListener('click', () => returnDialog.close());
 $('return-confirm').addEventListener('click', () => { returnDialog.close(); enterZone('plaza'); });
 $('result-return').addEventListener('click', () => { resultDialog.close(); enterZone('plaza'); });
@@ -265,9 +294,9 @@ addEventListener('keydown', event => {
   if (handlePanelShortcut(event, panelShortcuts, document.querySelector('dialog[open]'))) return;
   if (event.target.closest?.('dialog, input, select, textarea') || event.target.isContentEditable || event.isComposing) return;
   if (!started || photo || settings.open || journal.open || returnDialog.open || resultDialog.open || designsDialog.open || state.dead) return;
-  if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space', 'KeyQ', 'KeyE'].includes(event.code)) event.preventDefault();
+  if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space', 'KeyC', 'KeyQ', 'KeyE'].includes(event.code)) event.preventDefault();
   keys.add(event.code);
-  if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space'].includes(event.code)) cancelMove();
+  if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space', 'KeyC'].includes(event.code)) cancelMove();
   if (event.repeat) return;
   if (event.code === 'KeyE') performInteraction();
   if (event.code === 'KeyQ') {
@@ -275,12 +304,23 @@ addEventListener('keydown', event => {
     if (support) toast(support.message);
     else { const aim = getAim(); if (aim) facePoint(state, aim); if (shield(state)) chime(); else toast(state.energy < 20 ? '위상 에너지 20이 필요합니다.' : '잔금막이 재충전 중입니다.'); }
   }
-  if (event.code === 'Space' && dash(state)) world.dash();
+  if (event.code === 'Space') { if (state.climb) releaseClimb(state); else if (jump(state)) attacking = false; }
+  if (event.code === 'KeyC' && dash(state)) world.dash();
 });
 addEventListener('keyup', e => keys.delete(e.code));
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 const groundRay = new THREE.Raycaster(), groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 const cursor = new THREE.Vector2(), clickedGround = new THREE.Vector3();
+function pickWalkSurface(ray) {
+  const candidates = [], point = new THREE.Vector3();
+  if (ray.ray.intersectPlane(groundPlane, point)) candidates.push(point.clone());
+  for (const p of zoneFor(state.zone).platforms || []) {
+    if (insideBuilding(state) && p.kind === 'roof') continue;
+    const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -p.height);
+    if (ray.ray.intersectPlane(plane, point) && Math.abs(point.x - p.x) <= p.w / 2 && Math.abs(point.z - p.z) <= p.d / 2) candidates.push(point.clone());
+  }
+  return candidates.sort((a, b) => a.distanceToSquared(ray.ray.origin) - b.distanceToSquared(ray.ray.origin))[0];
+}
 const aimCursor = new THREE.Vector2();
 function updateAim(event) {
   const rect = canvas.getBoundingClientRect();
@@ -310,63 +350,74 @@ canvas.addEventListener('pointerdown', event => {
   const rect = canvas.getBoundingClientRect();
   cursor.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1);
   groundRay.setFromCamera(cursor, camera);
-  if (!groundRay.ray.intersectPlane(groundPlane, clickedGround)) return;
-  const next = findPath(state, { x: clickedGround.x, z: clickedGround.z });
+  const destination = pickWalkSurface(groundRay);
+  if (!destination) return;
+  if (!state.grounded || Math.abs(destination.y - state.y) > .02) { cancelMove(); toast('다른 높이의 발판은 WASD와 Space 점프로 이동하세요. 우클릭은 같은 높이에서만 가능합니다.'); return; }
+  const next = findPath(state, { x: destination.x, z: destination.z, ...(destination.y ? { y: destination.y } : {}) });
   path.splice(0, path.length, ...next);
   moveMarker.visible = path.length > 0;
-  if (path.length) { const goal = path[path.length - 1]; moveMarker.position.set(goal.x, .045, goal.z); moveMarker.scale.setScalar(1.45); }
+  if (path.length) { const goal = path[path.length - 1]; moveMarker.position.set(goal.x, (goal.y || 0) + .045, goal.z); moveMarker.scale.setScalar(1.45); }
   canvas.focus({ preventScroll: true });
 });
 canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); ready = false; $('loading').classList.remove('hide'); $('load-label').textContent = '그래픽 연결이 끊겼습니다. 페이지를 새로 고쳐 다시 연결해 주세요.'; });
 const forward = new THREE.Vector3(), side = new THREE.Vector3(), target = new THREE.Vector3(), projected = new THREE.Vector3();
 function hud() {
   const zone = zoneFor(state.zone), bounds = zone.bounds;
+  $('movement-status').textContent = `${state.climb ? '외벽 등반' : insideBuilding(state) ? '훈련동 실내' : state.grounded ? state.landTimer > .05 ? '착지' : '접지' : state.vy > 0 ? '상승' : '낙하'} · ${state.y.toFixed(1)}m`;
   $('hp').textContent = `${state.hp} / 120`; $('hp-fill').style.width = `${state.hp / 120 * 100}%`;
   $('guard-status').textContent = state.shield > 0 ? `방벽 ${state.shieldHp} · ${state.shield.toFixed(1)}초` : state.shieldCooldown > 0 ? `Q 재충전 ${state.shieldCooldown.toFixed(1)}초` : 'Q 잔금막 준비 · 에너지 20';
   $('combat-count').textContent = zone.safe ? `보유 ${campaign.credits} C · 주요 미션 ${campaign.completed.length}/3 완료` : state.exploring ? '탐방 중에는 미션·의뢰·보상이 진행되지 않습니다.' : `남은 위협 ${state.enemies.filter(e => e.hp > 0).length} · 구조 ${state.rescued}명`;
   document.body.classList.toggle('hit-flash', state.hurtFlash > 0);
   $('energy').innerHTML = `${state.energy}<span> / 100</span>`; $('energy-fill').style.width = state.energy + '%';
-  const count = state.recovered.filter(Boolean).length; $('progress-count').innerHTML = zone.safe ? '광장 <i>안전 구역</i>' : `0${count} <i>/ 0${zone.nodes.length}</i>`;
+  const count = state.recovered.filter(Boolean).length; $('progress-count').innerHTML = zone.training ? `${state.y.toFixed(1)} <i>m · 현재 높이</i>` : zone.safe ? '광장 <i>안전 구역</i>' : `0${count} <i>/ 0${zone.nodes.length}</i>`;
   document.querySelectorAll('.mission-progress>div i').forEach((el, i) => el.classList.toggle('done', i < count));
   for (let i = 0; i < zone.nodes.length; i++) if ($('map-node-' + i)) $('map-node-' + i).style.opacity = state.recovered[i] ? '.15' : '1';
   $('map-player')?.setAttribute('transform', `translate(${10 + (state.x - bounds.minX) / (bounds.maxX - bounds.minX) * 130} ${10 + (state.z - bounds.minZ) / (bounds.maxZ - bounds.minZ) * 140}) rotate(${Math.atan2(state.dx, -state.dz) * 180 / Math.PI})`);
-  $('objective').textContent = state.dead ? '출동 중단. 다시 시도하세요.' : zone.safe ? '동료와 대화하고 출동을 준비하세요.' : objectiveText(state);
-  $('mission-note').textContent = zone.safe ? 'J 임무·퀘스트 · E 대화' : state.exploring ? 'P 촬영 모드 · 우측 위 ⌂ 광장 복귀' : state.missionPhase === 'supports' ? 'Q 지지점 설치 · E 구조 장비 충전' : state.missionPhase === 'evacuate' ? '대피 중 · 추가 위협을 처리하세요' : 'E 조사·회수 · J 목표 확인';
+  $('objective').textContent = state.dead ? '출동 중단. 다시 시도하세요.' : zone.training ? state.climb ? '외벽을 따라 옥상까지 올라가 보세요.' : insideBuilding(state) ? '정비실 오른쪽 계단으로 옥상에 올라가세요.' : '발판 · 실내 훈련동 · 외벽을 탐험하세요.' : zone.safe ? '동료와 대화하고 출동을 준비하세요.' : objectiveText(state);
+  $('mission-note').textContent = zone.training ? state.climb ? 'W/S 오르내리기 · A/D 좌우\nSpace / E 놓기 · 높은 낙하 주의' : 'E 문 / 외벽 · WASD 계단 이동\nSpace 점프 · C 회피 · ⌂ 귀환' : zone.safe ? 'J 임무·퀘스트 · E 대화' : state.exploring ? 'P 촬영 모드 · 우측 위 ⌂ 광장 복귀' : state.missionPhase === 'supports' ? 'Q 지지점 설치 · E 구조 장비 충전' : state.missionPhase === 'evacuate' ? '대피 중 · 추가 위협을 처리하세요' : 'E 조사·회수 · J 목표 확인';
   const near = currentInteraction();
-  $('prompt').classList.toggle('hidden', !near || !started || photo || settings.open || journal.open || returnDialog.open || resultDialog.open || designsDialog.open);
+  $('prompt').classList.toggle('hidden', !near || !started || photo || !!state.climb || settings.open || journal.open || returnDialog.open || resultDialog.open || designsDialog.open);
   if (near) {
     const p = interactionPosition(near);
-    projected.set(p.x, 1.6, p.z).project(camera);
+    projected.set(p.x, (p.y || 0) + 1.6, p.z).project(camera);
     $('prompt').style.left = `${(projected.x * .5 + .5) * innerWidth}px`; $('prompt').style.top = `${(-projected.y * .5 + .5) * innerHeight}px`;
     $('prompt').querySelector('span').textContent = near.label || (near.kind === 'node' ? zone.id === 'archive' ? '원본 기록 확보' : '잔향 조사' : near.kind === 'drop' ? '처치 잔향 회수' : near.kind === 'aid' ? '구급함 · 체력 회복' : '상호작용');
   }
 }
 function render(now) {
   requestAnimationFrame(render);
-  if (!ready || document.hidden) { pacer.reset(); fpsTime = 0; frames = 0; return; }
+  if (!ready || document.hidden) { pacer.reset(); simulationClock.reset(); fpsTime = 0; frames = 0; return; }
   const paused = !started || settings.open || journal.open || returnDialog.open || resultDialog.open || designsDialog.open || state.dead;
   const frameSeconds = pacer.step(now, paused ? Math.min(30, graphics.fps) : graphics.fps);
   if (frameSeconds === null) return;
   const dt = Math.min(.05, frameSeconds);
   elapsed += dt; let moving = false;
   const active = started && !photo && !settings.open && !journal.open && !returnDialog.open && !resultDialog.open && !designsDialog.open && !state.dead;
-  if (active) {
+  simulationClock.advance(frameSeconds, active, step => {
+    if (state.dead) return;
     camera.getWorldDirection(forward); forward.y = 0; forward.normalize(); side.crossVectors(forward, new THREE.Vector3(0, 1, 0)).normalize();
     const vertical = Number(keys.has('KeyW')) - Number(keys.has('KeyS')), horizontal = Number(keys.has('KeyD')) - Number(keys.has('KeyA'));
     const running = keys.has('ShiftLeft') || keys.has('ShiftRight');
-    if (vertical || horizontal) {
+    if (state.climb) {
+      cancelMove(); moving = tick(state, step, { x: horizontal, z: -vertical }) || moving;
+    } else if (vertical || horizontal) {
       cancelMove();
-      moving = tick(state, dt, { x: forward.x * vertical + side.x * horizontal, z: forward.z * vertical + side.z * horizontal }, running);
-    } else moving = followPath(state, path, dt, running);
-    combatView.play(updateCombat(state, dt, combatView.visible));
+      moving = tick(state, step, { x: forward.x * vertical + side.x * horizontal, z: forward.z * vertical + side.z * horizontal }, running) || moving;
+    } else moving = followPath(state, path, step, running) || moving;
+    if (state.landingEvent) {
+      combatView.play([state.landingEvent]);
+      if (state.landingEvent.damage) toast(`낙하 ${state.landingEvent.height.toFixed(1)}m · 피해 ${state.landingEvent.damage}`);
+      state.landingEvent = null;
+    }
+    combatView.play(updateCombat(state, step, combatView.visible));
     if (attacking) shoot();
-    const storyEvent = advanceMission(state, dt); if (storyEvent) toast(storyEvent);
+    const storyEvent = advanceMission(state, step); if (storyEvent) toast(storyEvent);
     if (state.dead && !defeat.open) { cancelMove(); keys.clear(); attacking = false; defeat.showModal(); $('retry').focus(); }
-  }
+  });
   moveMarker.visible = path.length > 0 && active;
   moveMarker.scale.lerp(new THREE.Vector3(1, 1, 1), 1 - Math.exp(-8 * dt));
   if (!photo) {
-    desiredTarget.set(state.x, 1.1, state.z - 3.5);
+    desiredTarget.set(state.x, 1.1 + state.y, state.z - 3.5);
     target.copy(controls.target).lerp(desiredTarget, 1 - Math.exp(-4 * dt));
     camera.position.add(target.clone().sub(controls.target)); controls.target.copy(target);
   }
@@ -395,6 +446,8 @@ function releaseScene() {
 async function enterZone(zoneId, exploring = false) {
   if (transitioning || !zones[zoneId]) return;
   const zone = zones[zoneId];
+  if (zone.training) exploring = true;
+  simulationClock.reset();
   if (!exploring && zone.mission && !available(campaign, zone.mission)) { toast('이전 미션을 먼저 완료해야 합니다.'); return; }
   if (photo) setPhoto(false);
   transitioning = true; ready = false; attacking = false; keys.clear(); cancelMove(); aimValid = false;

@@ -20,7 +20,7 @@ export function parseCampaign(text) {
   return c;
 }
 export function storyNearby(s, c) {
-  if (!s.story || s.dead) return null;
+  if (!s.story || s.dead || s.grounded === false || Math.abs(s.y || 0) > .3) return null;
   const z = zoneFor(s.zone), targets = [];
   if (z.safe) {
     targets.push({ ...z.board, kind: 'board', label: '출동 게시판 · J' });
@@ -53,7 +53,7 @@ function spawn(s, id, x, z, boss = false) {
   s.enemies.push({ id, zone: s.zone, kind: 'chaser', isBoss: boss, name: boss ? '앵커 융합체' : '균열 추적체', x, z, hp, maxHp: hp, phase: 'idle', timer: 0, hitFlash: 0, aimX: 0, aimZ: 0, hit: false });
 }
 export function installSupport(s) {
-  if (s.dead || s.exploring || !s.story || s.missionPhase !== 'supports') return null;
+  if (s.dead || s.grounded === false || Math.abs(s.y || 0) > .3 || s.exploring || !s.story || s.missionPhase !== 'supports') return null;
   const z = zoneFor(s.zone), index = z.supports.findIndex((p, i) => !s.supports[i] && near(s, p, 2.5));
   if (index < 0) return null;
   if (s.energy < 20 || s.shieldCooldown > 0) return { kind: 'blocked', message: s.energy < 20 ? '가까운 구조 장비에서 E로 충전하세요.' : '잔금막이 재충전 중입니다.' };

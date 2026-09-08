@@ -98,7 +98,7 @@ export function createCombatView(scene, camera, state) {
       const m = dropModels.get(d.id); m.visible = d.amount > 0; m.position.set(d.x, .42 + Math.sin(elapsed * 4) * .08, d.z); m.rotation.set(elapsed, elapsed * .8, .3);
     }
     for (const [id, m] of dropModels) if (!s.drops.some(d => d.id === id)) m.visible = false;
-    aid.visible = !s.aidUsed; project(aidLabel, firstAid.x, 1.2, firstAid.z, !s.aidUsed && Math.hypot(firstAid.x - s.x, firstAid.z - s.z) < 7);
+    aid.visible = !s.aidUsed && !zoneFor(s.zone).training; project(aidLabel, firstAid.x, 1.2, firstAid.z, aid.visible && Math.hypot(firstAid.x - s.x, firstAid.z - s.z) < 7);
     for (let i = effects.length - 1; i >= 0; i--) {
       const e = effects[i]; e.life -= dt;
       if (e.expand) e.mesh.scale.addScalar(dt * 3);
@@ -120,7 +120,7 @@ export function createCombatView(scene, camera, state) {
       } else {
         const color = ['block', 'dodge', 'collect'].includes(event.type) ? 0xb8f4df : 0xe79865;
         const ring = new THREE.Mesh(new THREE.RingGeometry(.3, .36, 32), new THREE.MeshBasicMaterial({ color, transparent: true, side: THREE.DoubleSide, depthWrite: false }));
-        ring.rotation.x = -Math.PI / 2; ring.position.set(event.x, .055, event.z); addEffect(ring, event.type === 'blast' ? .5 : .25, true);
+        ring.rotation.x = -Math.PI / 2; ring.position.set(event.x, (event.y || 0) + .055, event.z); addEffect(ring, event.type === 'blast' ? .5 : .25, true);
         if (event.damage || event.blocked || event.type === 'dodge') {
           const label = document.createElement('span'); label.className = 'damage-number ' + event.type;
           label.textContent = event.type === 'block' ? `방어 ${event.blocked}${event.damage ? ' · 피해 ' + event.damage : ''}` : event.type === 'dodge' ? '회피' : '−' + event.damage;

@@ -10,6 +10,7 @@ export function facePoint(state, point) {
 
 export function takeDamage(s, amount, source) {
   if (s.dead || s.complete) return null;
+  if (Math.abs((s.y || 0) - (source.y || 0)) > .65) return null;
   if (s.dash > 0) return { type: 'dodge', x: s.x, z: s.z };
   let blocked = 0;
   const d = distance(s, source) || 1;
@@ -24,6 +25,7 @@ export function takeDamage(s, amount, source) {
 }
 
 export function attack(s, aim) {
+  if (s.grounded === false || s.landTimer > .1) return [];
   if (s.zone === 'plaza' || s.exploring || s.dead || s.complete || s.dash > 0 || s.attackCooldown > 0 || !Number.isFinite(aim.x) || !Number.isFinite(aim.z)) return [];
   facePoint(s, aim); s.attackCooldown = .45; s.attackPose = .22;
   const from = { x: s.x, z: s.z };
@@ -31,10 +33,10 @@ export function attack(s, aim) {
   // Resolve the first solid obstruction before targets, not just the target's position.
   for (let d = .08; d <= ATTACK_RANGE; d += .08) {
     const p = { x: s.x + s.dx * d, z: s.z + s.dz * d };
-    if (!free(p.x, p.z, .04, s.zone)) break; end = p;
+    if (!free(p.x, p.z, .04, s.zone, s.y || 0, s)) break; end = p;
   }
   const range = distance(from, end);
-  const targets = [...s.enemies, ...s.props].filter(e => e.hp > 0).map(e => {
+  const targets = [...s.enemies, ...s.props].filter(e => e.hp > 0 && Math.abs((e.y || 0) - (s.y || 0)) < .3).map(e => {
     const x = e.x - s.x, z = e.z - s.z;
     return { e, along: x * s.dx + z * s.dz, across: Math.abs(x * s.dz - z * s.dx) };
   }).filter(t => t.along >= 0 && t.along <= range && t.across < .68 && segmentClear(s, t.e, .04)).sort((a, b) => a.along - b.along);

@@ -1,4 +1,17 @@
 /* Field journal: shared scroll treatment and stable card slots. */
+.journal .training-entry { display: block; width: 100%; padding: 13px 16px; margin: 18px 0; border: 1px solid #9fb79066; background: #243b36; color: #d5e5c6; text-align: left; font-size: 12px; }
+#training-controls { display: grid; gap: 7px; margin-top: 14px; }
+#training-controls[hidden] { display: none; }
+#training-controls button { background: #213c36; border: 1px solid #9fb79066; padding: 9px; font-size: 11px; text-align: left; }
+#movement-status { color: #cfdfb9; }
+.mission.is-training { top: 110px; padding: 12px; max-width: 270px; background: #102129c7; }
+.mission.is-training .eyebrow { margin: 0; }
+.mission.is-training .health-block { margin-top: 12px; }
+.mission.is-training h2 { font-size: 14px; line-height: 1.5; margin: 12px 0; }
+.mission.is-training .mission-progress > div { display: none; }
+.mission.is-training #mission-note { font-size: 10px; line-height: 1.6; white-space: pre-line; margin: 10px 0; }
+.mission.is-training #combat-count { font-size: 9px; line-height: 1.5; }
+@media(max-width:700px) { .mission.is-training { top: 90px; max-width: 240px; } }
 .journal,
 .journal .card-description {
   scrollbar-width: thin;

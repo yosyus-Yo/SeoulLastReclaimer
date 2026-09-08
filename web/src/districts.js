@@ -17,7 +17,22 @@ export function buildDistrict(k, zone) {
     }
     return front;
   }
-  if (zone.id === 'plaza') {
+  if (zone.training) {
+    for (const p of zone.platforms.filter(p => !p.id.startsWith('warehouse-'))) {
+      const base = p.base || 0;
+      box(p.x, (base + p.height) / 2, p.z, p.w, p.height - base, p.d, m.concrete);
+      for (const side of [-1, 1]) {
+        box(p.x + side * (p.w / 2 - .08), p.height + .008, p.z, .08, .016, p.d, m.paint);
+        box(p.x, p.height + .008, p.z + side * (p.d / 2 - .08), p.w, .016, .08, m.paint);
+      }
+      const sign = new THREE.Group(); root.add(sign); sign.position.set(p.x, 0, p.z + p.d / 2 + .1);
+      board(sign, 0, base ? base + .17 : p.height / 2, 0, Math.min(p.w - .3, 2.6), .32, base ? '낮은 천장 · 머리 위 확인' : `${p.height.toFixed(1)}m · 점프 발판`, '', '#324d48', '#e9e4c8');
+    }
+    for (const post of zone.obstacles.filter(p => !p.id)) box(post.x, post.height / 2, post.z, post.w, post.height, post.d, m.metal);
+    const guide = new THREE.Group(); root.add(guide); guide.position.set(0, 0, -15);
+    board(guide, 0, 2.2, 0, 12, 1.25, '회수자 이동 훈련장', 'Space 점프 · Shift 달리기 · C 회피 · 높은 낙하 주의', '#314e48', '#ede5c9');
+    for (const x of [-12, 12]) { cylinder(x, 3, 0, .08, 6, m.metal); lamp(x, 5.8, 0, 0xffe0bb, 20, 14); }
+  } else if (zone.id === 'plaza') {
     const tile = pavingMaterial(); k.compareMaterials.push(tile);
     box(0, -.007, 0, 32, .018, 34, tile).castShadow = false;
     // Thin bronze inlays and a circular memorial apron break up the paving.

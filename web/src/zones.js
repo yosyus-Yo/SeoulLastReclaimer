@@ -1,8 +1,30 @@
+import { trainingBuilding, buildingWalls, buildingPlatforms, buildingDoors, buildingClimbs } from './training-building-data.js';
 const alleyObstacles = [
   { x: -4.2, z: 5, w: 1.3, d: 2.4 }, { x: 4.1, z: -4, w: 1.2, d: 2.8 },
   { x: -4.25, z: -10, w: 1.1, d: 2 }, { x: 3.6, z: 13, w: 1.8, d: 3.5 },
 ];
 export const zones = {
+  training: { id: 'training', name: '이동 훈련장', subtitle: 'S02 · 실내와 외벽 등반', training: true, safe: false,
+    bounds: { minX: -14, maxX: 30, minZ: -16, maxZ: 16 }, spawn: { x: 0, z: 12 }, aid: { x: 9, z: 12 }, anchor: { x: 0, z: -12 }, exit: { x: 0, z: 14 },
+    building: trainingBuilding, doors: buildingDoors, climbRoutes: buildingClimbs,
+    obstacles: [
+      { x: 4.12, z: 2.12, w: .12, d: .12, height: 2.35 }, { x: 7.88, z: 2.12, w: .12, d: .12, height: 2.35 },
+      { x: 4.12, z: 5.88, w: .12, d: .12, height: 2.35 }, { x: 7.88, z: 5.88, w: .12, d: .12, height: 2.35 },
+      ...buildingWalls,
+    ], npcs: [], nodes: [], supports: [], enemies: [], props: [],
+    platforms: [
+      { id: 'step-1', x: -7, z: 8, w: 3.6, d: 3.6, height: .6 },
+      { id: 'step-2', x: -7, z: 4, w: 3.6, d: 3.6, height: 1.2 },
+      { id: 'step-3', x: -7, z: 0, w: 3.6, d: 3.6, height: 1.8 },
+      { id: 'step-4', x: -7, z: -4, w: 3.6, d: 3.6, height: 2.4 },
+      { id: 'step-5', x: -7, z: -8, w: 3.6, d: 3.6, height: 3 },
+      { id: 'step-6', x: -3, z: -8, w: 3.6, d: 3.6, height: 3.6 },
+      { id: 'step-7', x: 1, z: -8, w: 3.6, d: 3.6, height: 4.2 },
+      { id: 'step-8', x: 5, z: -8, w: 3.6, d: 3.6, height: 4.8 },
+      { id: 'canopy', x: 6, z: 4, w: 4, d: 4, base: 2.35, height: 2.7 },
+      ...buildingPlatforms,
+    ],
+  },
   plaza: { id: 'plaza', name: '귀환광장', subtitle: '구로 임시 공동 방재거점', safe: true, bounds: { minX: -16, maxX: 16, minZ: -17, maxZ: 17 },
     spawn: { x: 0, z: 12 }, aid: { x: 10, z: 8 }, anchor: { x: 0, z: -12 }, exit: { x: 0, z: 13 }, nodes: [],
     obstacles: [{ x: 0, z: 0, w: 5.2, d: 5.2 }, { x: -10, z: -7, w: 3, d: 3 }, { x: 10, z: -7, w: 3, d: 3 }, { x: -10, z: 7, w: 3, d: 3 }],

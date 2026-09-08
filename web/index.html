@@ -7,7 +7,7 @@
     <title>서울의 마지막 회수자 — 구로 현장 기록</title>
   </head>
   <body>
-    <canvas id="world" aria-label="구로 골목 3D 체험 화면. 우클릭 또는 WASD 이동, 좌클릭 공격, E 회수와 구급함, Q 정면 방어, Space 회피." tabindex="0"></canvas>
+    <canvas id="world" aria-label="구로 골목 3D 체험 화면. 우클릭 또는 WASD 이동, 좌클릭 공격, E 회수와 구급함, Q 정면 방어, Space 점프, C 회피." tabindex="0"></canvas>
     <div class="grain" aria-hidden="true"></div>
     <header class="topbar">
       <a class="brand" href="./" aria-label="서울의 마지막 회수자 처음으로"><span class="brand-mark">↟</span><span>귀환<span class="brand-en">GUIHWAN · FIELD DIVISION</span></span></a>
@@ -29,6 +29,7 @@
       <div class="mission-progress"><span id="progress-count">00 <i>/ 03</i></span><div><i></i><i></i><i></i></div></div>
       <p id="mission-note">빛나는 잔향 가까이에서 E</p>
       <p id="combat-count">균열체 0 / 3 처리</p>
+      <div id="training-controls" hidden><button id="walk-to-building">훈련동 입구로 이동</button><button id="walk-to-climb">외벽 시작점으로 이동</button><button id="training-reset">훈련 다시 시작 · 체력 회복</button><button id="fall-practice">4.8m 발판에서 낙하 연습</button><button id="safe-return">안전 지점 복귀</button></div>
     </aside>
     <aside class="district" aria-label="현장 지도">
       <p><span id="district-name">귀환광장</span><span>▧</span></p>
@@ -39,7 +40,7 @@
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <footer class="bottom-bar">
       <div class="status-block"><span class="status-name">위상 에너지</span><strong id="energy">30<span> / 100</span></strong><div class="energy-track"><i id="energy-fill"></i></div></div>
-      <div class="controls"><span><kbd>우클릭</kbd><kbd>WASD</kbd> 이동</span><span><kbd>좌클릭</kbd> 공격</span><span><kbd>Shift</kbd> 달리기</span><span><kbd>E</kbd> 상호작용</span><span><kbd>Q</kbd> 방어</span><span><kbd>Space</kbd> 회피</span></div>
+      <div class="controls"><span><kbd>우클릭</kbd><kbd>WASD</kbd> 이동</span><span><kbd>좌클릭</kbd> 공격</span><span><kbd>Shift</kbd> 달리기</span><span><kbd>E</kbd> 상호작용</span><span><kbd>Q</kbd> 방어</span><span><kbd>Space</kbd> 점프</span><span><kbd>C</kbd> 회피</span><span id="movement-status">접지 · 0.0m</span></div>
       <button id="material-compare" class="compare" aria-pressed="false">◐ <span>기본 재질과 비교</span></button>
     </footer>
     <div class="technical"><span>CHAPTER 01 — 회수자의 이름</span><span id="fps">준비 중</span></div>

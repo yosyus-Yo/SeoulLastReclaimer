@@ -21,7 +21,7 @@ export async function createQuestView(scene, camera, zoneId) {
     return g;
   }
   function marker(point, kind, text, id = '') {
-    const g = new THREE.Group(); root.add(g); g.position.set(point.x, 0, point.z);
+    const g = new THREE.Group(); root.add(g); g.position.set(point.x, point.y || 0, point.z);
     part(g, new THREE.RingGeometry(.55, .6, 32), markerMat, 0, .04, 0).rotation.x = -Math.PI / 2;
     if (kind === 'item' || kind === 'charge') {
       part(g, new THREE.BoxGeometry(.55, .55, .4), gray, 0, .3, 0);
@@ -36,6 +36,8 @@ export async function createQuestView(scene, camera, zoneId) {
   }
   for (const npc of zone.npcs) marker(npc, 'npc', 'E ' + npc.name + ' · ' + npc.role, npc.id);
   if (zone.board) marker(zone.board, 'board', 'E 출동 게시판 · J');
+  for (const door of zone.doors || []) marker(door, 'door', 'E 훈련동 문 열기', door.id);
+  for (const route of zone.climbRoutes || []) { marker(route.bottom, 'climb', 'E 외벽에 붙기', route.id); marker(route.top, 'climb', 'E 외벽 내려가기', route.id); }
   for (const q of sideQuests) if (q.zone === zoneId) for (const p of q.points) {
     const e = marker(p, 'item', q.id === 'SQ04' ? 'E 배전함 복구' : 'E ' + q.name, p.id);
     if (q.id === 'SQ04') { e.powerLight = new THREE.PointLight(0xffdfa9, 0, 9); e.powerLight.position.y = 3; e.group.add(e.powerLight); }
@@ -60,9 +62,12 @@ export async function createQuestView(scene, camera, zoneId) {
       if (e.kind === 'support') { visible = ['supports', 'evacuate', 'boss', 'extract', 'complete'].includes(state.missionPhase); text = state.supports[+e.id] ? '안전선 고정 완료' : e.text; }
       if (e.kind === 'charge') visible = state.missionPhase === 'supports';
       if (e.kind === 'exit') text = state.missionPhase === 'extract' ? 'E 귀환 확인 · 임무 완료' : e.text;
-      if (state.exploring && e.kind !== 'exit') visible = false;
+      if (e.kind === 'door') text = state.doors[e.id] ? 'E 훈련동 문 닫기' : 'E 훈련동 문 열기';
+      if (['door', 'climb'].includes(e.kind) && Math.abs(state.y - (e.point.y || 0)) > 1.4) visible = false;
+      if (e.kind === 'climb' && state.climb) visible = false;
+      if (state.exploring && !['exit', 'door', 'climb'].includes(e.kind)) visible = false;
       e.group.visible = visible;
-      projected.set(e.point.x, e.kind === 'support' ? 2.5 : 2, e.point.z).project(camera);
+      projected.set(e.point.x, (e.point.y || 0) + (e.kind === 'support' ? 2.5 : 2), e.point.z).project(camera);
       e.label.hidden = !visible || projected.z < -1 || projected.z > 1 || Math.abs(projected.x) > .95 || Math.abs(projected.y) > .88 || Math.hypot(state.x - e.point.x, state.z - e.point.z) > 14;
       e.label.textContent = text; e.label.style.left = `${(projected.x * .5 + .5) * innerWidth}px`; e.label.style.top = `${(-projected.y * .5 + .5) * innerHeight}px`;
     }

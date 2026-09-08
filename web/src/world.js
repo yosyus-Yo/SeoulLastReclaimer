@@ -5,6 +5,8 @@ import { Reflector } from 'three/addons/objects/Reflector.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { zoneFor } from './zones.js';
 import { buildDistrict, buildBackdrop } from './districts.js';
+import { supportAt } from './collision-world.js';
+import { createTrainingBuilding } from './training-building-view.js';
 
 const C = { cyan: 0xb9f5e8, metal: 0x424c4c, amber: 0xeebf79, plaster: 0xaaa79a };
 let seed = 137;
@@ -219,6 +221,7 @@ export async function makeWorld(scene, renderer, progress, zoneId = 'logistics')
   const kit = { box, cylinder, mesh, line, board, root: geometryRoot, lamp, animations, compareMaterials,
     mats: { road, brick, concrete, metal, dark, cream, rust, orange, paint, warm, cool, glass, paper, greenery } };
   if (zone.id !== 'logistics') buildDistrict(kit, zone);
+  const buildingView = zone.training ? createTrainingBuilding(scene, kit, zone) : null;
   buildBackdrop(kit, zone);
   // Merge opaque static meshes by material: detailed street, bounded draw calls.
   geometryRoot.updateMatrixWorld(true);
@@ -279,6 +282,8 @@ export async function makeWorld(scene, renderer, progress, zoneId = 'logistics')
     if (o.isBone && /LeftHand$/.test(o.name)) hand = o;
   });
   const mixer = new THREE.AnimationMixer(soldier.scene); const actions = {};
+  const poseBones = {};
+  soldier.scene.traverse(o => { if (o.isBone) for (const name of ['LeftUpLeg', 'RightUpLeg', 'LeftLeg', 'RightLeg', 'LeftArm', 'RightArm', 'Spine']) if (o.name.endsWith(name)) poseBones[name] = o; });
   for (const clip of soldier.animations) { if (clip.name === 'TPose') continue; const action = mixer.clipAction(clip); action.play(); action.setEffectiveWeight(clip.name === 'Idle' ? 1 : 0); actions[clip.name] = action; }
   const handGlow = new THREE.PointLight(C.cyan, 1.4, 1.7); handGlow.position.set(-.3, 1.05, .1); player.add(handGlow);
   const ringMaterial = new THREE.MeshBasicMaterial({ color: C.cyan, transparent: true, opacity: .32, side: THREE.DoubleSide, depthWrite: false });
@@ -324,13 +329,32 @@ export async function makeWorld(scene, renderer, progress, zoneId = 'logistics')
   setWet(.75); setLight(.45);
   let lastAction = 'Idle';
   function update(s, dt, elapsed, moving, running) {
+    buildingView?.update(s, dt);
     for (const animate of animations) animate(elapsed);
-    player.position.set(s.x, 0, s.z);
+    player.position.set(s.x, s.y || 0, s.z);
     const heading = Math.atan2(s.dx, s.dz); const target = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), heading);
     player.quaternion.slerp(target, 1 - Math.exp(-12 * dt));
-    const action = moving ? running || s.dash > 0 ? 'Run' : 'Walk' : 'Idle';
+    const action = s.grounded === false ? 'Idle' : moving ? running || s.dash > 0 ? 'Run' : 'Walk' : 'Idle';
     if (action !== lastAction) { actions[lastAction]?.fadeOut(.22); actions[action]?.reset().setEffectiveWeight(1).fadeIn(.22).play(); lastAction = action; }
     mixer.update(dt); mirror.material.uniforms.time.value = elapsed;
+    // Temporary additive jump/landing pose on the existing rig, not a new authored clip.
+    const tuck = s.grounded === false ? .48 + (s.vy > 0 ? .15 : 0) : Math.min(1, (s.landTimer || 0) / .16) * .3;
+    if (tuck) {
+      for (const name of ['LeftUpLeg', 'RightUpLeg']) if (poseBones[name]) poseBones[name].rotation.x -= tuck;
+      for (const name of ['LeftLeg', 'RightLeg']) if (poseBones[name]) poseBones[name].rotation.x += tuck * 1.7;
+      if (poseBones.LeftArm) poseBones.LeftArm.rotation.z -= tuck * .45;
+      if (poseBones.RightArm) poseBones.RightArm.rotation.z += tuck * .45;
+    }
+    if (s.climb) {
+      const cycle = moving ? Math.sin(elapsed * 7) : 0;
+      if (poseBones.LeftArm) poseBones.LeftArm.rotation.z -= 1.7 + cycle * .18;
+      if (poseBones.RightArm) poseBones.RightArm.rotation.z += 1.7 - cycle * .18;
+      if (poseBones.LeftUpLeg) poseBones.LeftUpLeg.rotation.x -= .25 + cycle * .2;
+      if (poseBones.RightUpLeg) poseBones.RightUpLeg.rotation.x -= .25 - cycle * .2;
+    }
+    const ground = supportAt(s.x, s.z, s.y || 0, s.zone, s);
+    playerRing.position.y = (ground?.y || 0) - (s.y || 0) + .035;
+    playerRing.scale.setScalar(s.grounded === false ? 1.15 : 1);
     handGlow.intensity = s.attackPose > 0 ? 5 : 1.4;
     for (const e of echoes) {
       if (s.recovered[e.index] && e.taking <= 0) e.root.visible = false;
@@ -342,7 +366,7 @@ export async function makeWorld(scene, renderer, progress, zoneId = 'logistics')
     shieldRoot.visible = s.shield > 0 && s.shieldHp > 0;
     shieldRoot.position.copy(player.position).add(new THREE.Vector3(s.guardX * .7, 1.1, s.guardZ * .7)); shieldRoot.rotation.y = Math.atan2(s.guardX, s.guardZ);
     shieldMat.opacity = .12 + Math.min(s.shield, 1) * .1;
-    rift.visible = !zone.safe && !s.complete; rift.rotation.y = elapsed * .2;
+    rift.visible = !zone.safe && !zone.training && !s.complete; rift.rotation.y = elapsed * .2;
     for (let i = trails.length - 1; i >= 0; i--) { trails[i].life -= dt; trails[i].line.material.opacity = Math.max(0, trails[i].life); if (trails[i].life <= 0) { const l = trails[i].line; scene.remove(l); l.geometry.dispose(); l.material.dispose(); trails.splice(i, 1); } }
   }
   return { player, mirror, sun, compare, setWet, setLight, setGraphics, update, rendererStats: { staticBatches: groups.size },
