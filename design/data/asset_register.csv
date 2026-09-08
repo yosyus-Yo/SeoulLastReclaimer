@@ -1,0 +1,90 @@
+﻿id,category,name_ko,specification,quantity,scope,owner_role,status,source_license
+TK01,Character,태경,FBX LOD0/1/2; body 2048 PNG; see doc11,1,VS,Art,Planned,To confirm
+SR01,Character,서린,FBX LOD0/1/2; body 2048 PNG; see doc11,1,VS,Art,Planned,To confirm
+HR01,Character,하린,FBX LOD0/1/2; body 2048 PNG; see doc11,1,Full,Art,Planned,To confirm
+DY01,Character,도윤,FBX LOD0/1/2; body 2048 PNG; see doc11,1,Full,Art,Planned,To confirm
+MR01,Character,미라,FBX LOD0/1/2; body 2048 PNG; see doc11,1,Full,Art,Planned,To confirm
+BK01,Character,기석,FBX LOD0/1/2; body 2048 PNG; see doc11,1,VS,Art,Planned,To confirm
+SW01,Character,선우,FBX LOD0/1/2; body 2048 PNG; see doc11,1,Full,Art,Planned,To confirm
+ST01,Character,세라트,FBX LOD0/1/2; body 2048 PNG; see doc11,1,Full,Art,Planned,To confirm
+EN001,Enemy,균열 추적체,FBX LOD0/1; 2048 PNG; behavior states,1,VS,Art,Planned,To confirm
+EN002,Enemy,잔류 포격체,FBX LOD0/1; 2048 PNG; behavior states,1,VS,Art,Planned,To confirm
+EN003,Enemy,기업 방벽병,FBX LOD0/1; 2048 PNG; behavior states,1,Full,Art,Planned,To confirm
+EN004,Enemy,케이블 포획체,FBX LOD0/1; 2048 PNG; behavior states,1,Full,Art,Planned,To confirm
+EN005,Enemy,표지판 의태체,FBX LOD0/1; 2048 PNG; behavior states,1,Full,Art,Planned,To confirm
+EN006,Enemy,서기관 파수병,FBX LOD0/1; 2048 PNG; behavior states,1,Full,Art,Planned,To confirm
+EN007,Enemy,위상 방출체,FBX LOD0/1; 2048 PNG; behavior states,1,Full,Art,Planned,To confirm
+EN008,Enemy,폐문 정예병,FBX LOD0/1; 2048 PNG; behavior states,1,Full,Art,Planned,To confirm
+BS001,Enemy,적재장 융합체,FBX LOD0/1; 2048 PNG; behavior states,1,VS,Art,Planned,To confirm
+BS002,Enemy,주거 방벽핵,FBX LOD0/1; 2048 PNG; behavior states,1,Full,Art,Planned,To confirm
+BS003,Enemy,분기역 수호체,FBX LOD0/1; 2048 PNG; behavior states,1,Full,Art,Planned,To confirm
+BS004,Enemy,추방지의 집행자,FBX LOD0/1; 2048 PNG; behavior states,1,Full,Art,Planned,To confirm
+BS005,Enemy,역류 실험체,FBX LOD0/1; 2048 PNG; behavior states,1,Full,Art,Planned,To confirm
+BS006,Enemy,폐문핵,FBX LOD0/1; 2048 PNG; behavior states,1,Full,Art,Planned,To confirm
+PR001,Prop,배송 상자,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR002,Prop,팔레트,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR003,Prop,배전함,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR004,Prop,철제 선반,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR005,Prop,지게차,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR006,Prop,컨베이어,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR007,Prop,화물 셔터,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR008,Prop,안전 기둥,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR009,Prop,작업등,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR010,Prop,소화기,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR011,Prop,실외기,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR012,Prop,통제선,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR013,Prop,회수 차량,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR014,Prop,의료 가방,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR015,Prop,대피 표지,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR016,Prop,이동 배터리,FBX; 512~1024 PNG; pivot and collider,1,VS,Art,Planned,To confirm
+PR017,Prop,개찰구,FBX; 512~1024 PNG; pivot and collider,1,Full,Art,Planned,To confirm
+PR018,Prop,스크린도어,FBX; 512~1024 PNG; pivot and collider,1,Full,Art,Planned,To confirm
+PR019,Prop,변압기,FBX; 512~1024 PNG; pivot and collider,1,Full,Art,Planned,To confirm
+PR020,Prop,앵커 링,FBX; 512~1024 PNG; pivot and collider,1,Full,Art,Planned,To confirm
+EV01_wall,Environment,산업 골목 wall,2m grid; 1024~2048 tiling; FBX/PNG,4,VS,Art,Planned,To confirm
+EV01_floor,Environment,산업 골목 floor,2m grid; 1024~2048 tiling; FBX/PNG,3,VS,Art,Planned,To confirm
+EV01_door,Environment,산업 골목 door,2m grid; 1024~2048 tiling; FBX/PNG,2,VS,Art,Planned,To confirm
+EV01_decal,Environment,산업 골목 decal,2m grid; 1024~2048 tiling; FBX/PNG,6,VS,Art,Planned,To confirm
+EV02_wall,Environment,주거 재개발 wall,2m grid; 1024~2048 tiling; FBX/PNG,4,Full,Art,Planned,To confirm
+EV02_floor,Environment,주거 재개발 floor,2m grid; 1024~2048 tiling; FBX/PNG,3,Full,Art,Planned,To confirm
+EV02_door,Environment,주거 재개발 door,2m grid; 1024~2048 tiling; FBX/PNG,2,Full,Art,Planned,To confirm
+EV02_decal,Environment,주거 재개발 decal,2m grid; 1024~2048 tiling; FBX/PNG,6,Full,Art,Planned,To confirm
+EV03_wall,Environment,지하철 앵커 wall,2m grid; 1024~2048 tiling; FBX/PNG,4,Full,Art,Planned,To confirm
+EV03_floor,Environment,지하철 앵커 floor,2m grid; 1024~2048 tiling; FBX/PNG,3,Full,Art,Planned,To confirm
+EV03_door,Environment,지하철 앵커 door,2m grid; 1024~2048 tiling; FBX/PNG,2,Full,Art,Planned,To confirm
+EV03_decal,Environment,지하철 앵커 decal,2m grid; 1024~2048 tiling; FBX/PNG,6,Full,Art,Planned,To confirm
+EV04_wall,Environment,위상층 피난소 wall,2m grid; 1024~2048 tiling; FBX/PNG,4,Full,Art,Planned,To confirm
+EV04_floor,Environment,위상층 피난소 floor,2m grid; 1024~2048 tiling; FBX/PNG,3,Full,Art,Planned,To confirm
+EV04_door,Environment,위상층 피난소 door,2m grid; 1024~2048 tiling; FBX/PNG,2,Full,Art,Planned,To confirm
+EV04_decal,Environment,위상층 피난소 decal,2m grid; 1024~2048 tiling; FBX/PNG,6,Full,Art,Planned,To confirm
+EV05_wall,Environment,공동 실험실 wall,2m grid; 1024~2048 tiling; FBX/PNG,4,Full,Art,Planned,To confirm
+EV05_floor,Environment,공동 실험실 floor,2m grid; 1024~2048 tiling; FBX/PNG,3,Full,Art,Planned,To confirm
+EV05_door,Environment,공동 실험실 door,2m grid; 1024~2048 tiling; FBX/PNG,2,Full,Art,Planned,To confirm
+EV05_decal,Environment,공동 실험실 decal,2m grid; 1024~2048 tiling; FBX/PNG,6,Full,Art,Planned,To confirm
+EV06_wall,Environment,폐문 중심부 wall,2m grid; 1024~2048 tiling; FBX/PNG,4,Full,Art,Planned,To confirm
+EV06_floor,Environment,폐문 중심부 floor,2m grid; 1024~2048 tiling; FBX/PNG,3,Full,Art,Planned,To confirm
+EV06_door,Environment,폐문 중심부 door,2m grid; 1024~2048 tiling; FBX/PNG,2,Full,Art,Planned,To confirm
+EV06_decal,Environment,폐문 중심부 decal,2m grid; 1024~2048 tiling; FBX/PNG,6,Full,Art,Planned,To confirm
+SK001_VFX,VFX,파편격,Prefab + 256/512 texture; see VFX board,1,VS,Art,Planned,To confirm
+SK002_VFX,VFX,회수,Prefab + 256/512 texture; see VFX board,1,VS,Art,Planned,To confirm
+SK003_VFX,VFX,잔금막,Prefab + 256/512 texture; see VFX board,1,VS,Art,Planned,To confirm
+SK004_VFX,VFX,견인선,Prefab + 256/512 texture; see VFX board,1,VS,Art,Planned,To confirm
+SK005_VFX,VFX,반납,Prefab + 256/512 texture; see VFX board,1,Full,Art,Planned,To confirm
+SK006_VFX,VFX,해체점,Prefab + 256/512 texture; see VFX board,1,Full,Art,Planned,To confirm
+SK007_VFX,VFX,귀환로,Prefab + 256/512 texture; see VFX board,1,Full,Art,Planned,To confirm
+SK008_VFX,VFX,회수권역,Prefab + 256/512 texture; see VFX board,1,Full,Art,Planned,To confirm
+UI01,UI,타이틀,1920x1080 layout; icon128 PNG; font license,1,VS,Art,Planned,To confirm
+UI02,UI,HUD,1920x1080 layout; icon128 PNG; font license,1,VS,Art,Planned,To confirm
+UI03,UI,거점,1920x1080 layout; icon128 PNG; font license,1,VS,Art,Planned,To confirm
+UI04,UI,연구,1920x1080 layout; icon128 PNG; font license,1,VS,Art,Planned,To confirm
+UI05,UI,임무,1920x1080 layout; icon128 PNG; font license,1,VS,Art,Planned,To confirm
+UI06,UI,결과,1920x1080 layout; icon128 PNG; font license,1,VS,Art,Planned,To confirm
+UI07,UI,설정,1920x1080 layout; icon128 PNG; font license,1,VS,Art,Planned,To confirm
+UI08,UI,아이템 아이콘,1920x1080 layout; icon128 PNG; font license,8,VS,Art,Planned,To confirm
+AN_TK01,Animation,태경 모션 묶음,FBX 30fps; animation_list.csv,26,VS,Art,Planned,To confirm
+AN_NPC,Animation,NPC와 보스 모션 묶음,FBX 30fps; animation_list.csv,30,Full,Art,Planned,To confirm
+AU_ALL,Audio,음악 효과음 보이스 묶음,48kHz 24bit WAV; sound_list.csv,43,Full,Audio,Planned,To confirm
+CS_ALL,Cutscene,주요 장면 시퀀스,Timeline + subtitles; no full facial mocap,12,Full,Art,Planned,To confirm
+STORE01,Marketing,스토어 캡슐,Platform current template; layered source,4,Full,Art,Planned,To confirm
+STORE02,Marketing,실제 게임 스크린샷,1920x1080 or above; capture after build,7,Full,Art,Planned,To confirm
+STORE03,Marketing,60초 트레일러,1920x1080 video; capture after build,1,Full,Art,Planned,To confirm

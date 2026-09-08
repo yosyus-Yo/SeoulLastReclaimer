@@ -1,0 +1,82 @@
+[
+  {
+    "key": "tk",
+    "file": "TK01_turnaround_concept.png",
+    "method": "built-in image_gen",
+    "type": "AI generated concept",
+    "status": "Draft for production",
+    "prompt_ref": "prompts.json"
+  },
+  {
+    "key": "tk_pose",
+    "file": "TK01_expression_pose.png",
+    "method": "built-in image_gen",
+    "type": "AI generated concept",
+    "status": "Draft for production",
+    "prompt_ref": "prompts.json"
+  },
+  {
+    "key": "cast",
+    "file": "characters_lineup.png",
+    "method": "built-in image_gen",
+    "type": "AI generated concept",
+    "status": "Draft for production",
+    "prompt_ref": "prompts.json"
+  },
+  {
+    "key": "environment",
+    "file": "environment_board.png",
+    "method": "built-in image_gen",
+    "type": "AI generated concept",
+    "status": "Draft for production",
+    "prompt_ref": "prompts.json"
+  },
+  {
+    "key": "medical_models",
+    "file": "SR01_HR01_turnaround.png",
+    "method": "built-in image_gen",
+    "type": "AI generated concept",
+    "status": "Draft for production",
+    "prompt_ref": "prompts.json"
+  },
+  {
+    "key": "team_models",
+    "file": "DY01_MR01_BK01_turnaround.png",
+    "method": "built-in image_gen",
+    "type": "AI generated concept",
+    "status": "Draft for production",
+    "prompt_ref": "prompts.json"
+  },
+  {
+    "key": "boundary_models",
+    "file": "SW01_ST01_turnaround.png",
+    "method": "built-in image_gen",
+    "type": "AI generated concept",
+    "status": "Draft for production",
+    "prompt_ref": "prompts.json"
+  },
+  {
+    "key": "enemy",
+    "file": "BS001_enemy_concepts.png",
+    "method": "built-in image_gen",
+    "type": "AI generated concept",
+    "status": "Draft for production",
+    "prompt_ref": "prompts.json"
+  },
+  {
+    "key": "vfx",
+    "file": "VFX_board.png",
+    "method": "built-in image_gen",
+    "type": "AI generated concept",
+    "status": "Draft for production",
+    "prompt_ref": "prompts.json"
+  },
+  {
+    "key": "storyboard",
+    "file": "storyboard_cs001.png",
+    "method": "built-in image_gen",
+    "type": "AI generated concept",
+    "status": "Draft for production",
+    "prompt_ref": "prompts.json"
+  }
+]

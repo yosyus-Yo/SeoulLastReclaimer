@@ -1,0 +1,36 @@
+﻿id,title,owner_role,milestone,estimate_person_days,dependencies,acceptance,priority,status
+BL001,이동과 카메라,Dev,Prototype,5,,캐릭터가 벽을 통과하지 않고 고정 시점 이동,P0,Planned
+BL002,입력 재매핑,Dev,Prototype,3,BL001,키와 패드 핵심 입력 저장,P0,Planned
+BL003,기본 공격과 피해,Dev,Prototype,4,BL001,공식과 중복 타격 테스트 통과,P0,Planned
+BL004,회피와 체력,Dev,Prototype,3,BL003,무적 시간과 체력 회복 일치,P0,Planned
+BL005,잔향 회수,Dev,Prototype,5,BL003,중복 회수와 포화 테스트 통과,P0,Planned
+BL006,구조 지점,Dev,Prototype,3,BL005,7명 귀환 조건 검증,P0,Planned
+BL007,LV001 블록아웃,Design,Prototype,4,,시작부터 탈출까지 경로 연결,P0,Planned
+BL008,BS001 행동,Dev,VS,6,BL003,3단계와 기둥 노출 동작,P0,Planned
+BL009,체크포인트 저장,Dev,VS,5,BL006,중단 재개와 보상 중복 방지,P0,Planned
+BL010,거점 연구,Dev,VS,4,BL009,해금과 장착 루프 동작,P0,Planned
+BL011,TK01 모델,Art,VS,10,,4뷰와 장갑 좌우 검수,P0,Planned
+BL012,TK01 리그와 모션,Art,VS,10,BL011,관절과 이동 슬라이딩 검수,P0,Planned
+BL013,EV01 키트,Art,VS,10,BL007,벽 바닥 프롭 반입,P0,Planned
+BL014,회수와 방벽 VFX,Art,VS,5,BL005,위험 표식 가독성 검수,P0,Planned
+BL015,HUD와 메뉴,Dev,VS,5,BL002,패드 포커스와 720p 검수,P0,Planned
+BL016,VS 사운드,Audio,VS,6,BL008,경고와 대사 믹스 검수,P0,Planned
+BL017,VS 외부 테스트,Design,VS,3,BL009;BL014;BL015,12명 프로토콜 실시,P0,Planned
+BL018,VS 개선,Dev,VS,5,BL017,상위 문제 재검증,P0,Planned
+BL019,18임무 알파,Design,Alpha,35,BL018,시작부터 엔딩 진행,P1,Planned
+BL020,남은 도식,Dev,Alpha,15,BL010,8도식과 변형 작동,P1,Planned
+BL021,적 원형 확장,Dev,Alpha,18,BL008,8원형 행동과 예고 검수,P1,Planned
+BL022,보스 6종,Dev,Alpha,24,BL021,최종전까지 행동 구현,P1,Planned
+BL023,동료 모델,Art,Content,30,BL011,라인업 7명 실제 모델,P1,Planned
+BL024,환경 6키트,Art,Content,45,BL013,6챕터 구성,P1,Planned
+BL025,본편 대사와 컷신,Design,Content,22,BL019,스킵 및 플래그 검수,P1,Planned
+BL026,번역과 UI 길이,Loc,Beta,10,BL025,한영 자막 잘림 0,P1,Planned
+BL027,성능 조정,Dev,Beta,12,BL024,후보 PC 목표 측정,P1,Planned
+BL028,저장 마이그레이션,Dev,Beta,5,BL009,이전 스키마 보존,P1,Planned
+BL029,접근성 검사,QA,Beta,6,BL015,재매핑 자막 효과 감소 검수,P1,Planned
+BL030,전체 QA,QA,Beta,20,BL022;BL025,P0 P1 0,P1,Planned
+BL031,스토어 촬영과 영상,Art,RC,10,BL030,실제 빌드 캡처,P1,Planned
+BL032,등급과 권리 검토,PD,RC,8,BL025,배포 경로 자료 완비,P1,Planned
+BL033,개인정보 및 약관 확정,PD,RC,4,BL028,실제 데이터 흐름 반영,P1,Planned
+BL034,출시 회귀 검사,QA,Gold,5,BL030;BL032;BL033,클린 설치와 오프라인 검수,P1,Planned
+BL035,골드와 복구 패키지,Dev,Gold,3,BL034,빌드와 백업 해시 보관,P1,Planned

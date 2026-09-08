@@ -1,0 +1,61 @@
+﻿line_id,scene_id,speaker_id,text_ko,emotion,trigger,next_id,skippable
+CS001_001,CS001,BK01,"안에 남은 작업자, 일곱이다.",neutral,scene_enter,CS001_002,True
+CS001_002,CS001,TK01,확인했습니다. 일곱 명.,neutral,previous_complete,CS001_003,True
+CS001_003,CS001,BK01,잔류물보다 출구부터 봐.,focus,previous_complete,CS001_004,True
+CS001_004,CS001,TK01,반장님. 흐름이 이상합니다.,focus,previous_complete,CS001_005,True
+CS001_005,CS001,BK01,어느 쪽인데.,focus,previous_complete,CS001_006,True
+CS001_006,CS001,TK01,밖으로 나와야 할 게 지하로 들어갑니다.,fear,previous_complete,CS001_007,True
+CS001_007,CS001,BK01,작업 중지. 먼저 나갈 길부터 잡는다.,firm,previous_complete,,True
+CS002_001,CS002,TK01,"방패는 부서졌는데, 힘은 남아 있어.",focus,scene_enter,CS002_002,True
+CS002_002,CS002,BK01,읽히냐?,focus,previous_complete,CS002_003,True
+CS002_003,CS002,TK01,전부는 아닙니다. 버티는 방향만.,focus,previous_complete,CS002_004,True
+CS002_004,CS002,BK01,그 정도면 돼. 우리가 나갈 시간만 벌어.,firm,previous_complete,CS002_005,True
+CS002_005,CS002,TK01,왼쪽 통로로! 기둥에는 손대지 마세요.,urgent,previous_complete,,True
+CS003_001,CS003,SR01,"팔이 괜찮다는 말 말고, 어디부터 감각이 없는지 말해요.",firm,scene_enter,CS003_002,True
+CS003_002,CS003,TK01,손끝부터요. 아직 움직입니다.,tired,previous_complete,CS003_003,True
+CS003_003,CS003,SR01,움직이는 것과 안전한 건 달라요.,firm,previous_complete,CS003_004,True
+CS003_004,CS003,DY01,저 통로를 당신이 만든 겁니까?,doubt,previous_complete,CS003_005,True
+CS003_005,CS003,TK01,무너지는 순서만 바꿨습니다.,neutral,previous_complete,,True
+CS005_001,CS005,MR01,서명하면 치료비는 나와요. 기록은 사라지고요.,neutral,scene_enter,CS005_002,True
+CS005_002,CS005,HR01,"내 치료비로 오빠가 입 다무는 거면, 그건 내가 받은 치료가 아니야.",firm,previous_complete,CS005_003,True
+CS005_003,CS005,TK01,그럼 다른 계약을 찾아야겠네.,resolve,previous_complete,CS005_004,True
+CS005_004,CS005,MR01,찾는 건 제가 할게요. 현장 기록부터 주세요.,focus,previous_complete,,True
+CS006_001,CS006,BK01,숫자 맞았냐.,weak,scene_enter,CS006_002,True
+CS006_002,CS006,TK01,맞았습니다. 전부 나왔습니다.,grief,previous_complete,CS006_003,True
+CS006_003,CS006,BK01,그래. 됐다.,relief,previous_complete,CS006_004,True
+CS006_004,CS006,SR01,태경 씨. 손 잡고 있어도 돼요.,grief,previous_complete,,True
+CS009_001,CS009,SW01,봉쇄를 늦추면 바깥도 잃는다.,firm,scene_enter,CS009_002,True
+CS009_002,CS009,TK01,여기 두 경로의 붕괴 속도가 줄었습니다. 자료 보세요.,focus,previous_complete,CS009_003,True
+CS009_003,CS009,SW01,얼마나 버틸 수 있지?,focus,previous_complete,CS009_004,True
+CS009_004,CS009,TK01,혼자서는 모릅니다. 연결하면 계산할 수 있습니다.,resolve,previous_complete,,True
+CS010_001,CS010,ST01,"너희 도시의 불빛이 켜질 때, 우리 거리 하나가 사라졌다.",restrained,scene_enter,CS010_002,True
+CS010_002,CS010,TK01,그 말을 확인할 기록이 필요합니다.,focus,previous_complete,CS010_003,True
+CS010_003,CS010,ST01,보여 주겠다. 너희 것도 보여 다오.,firm,previous_complete,,True
+CS012_001,CS012,HR01,오빠. 이 신호는 현재 송신이 아니야. 같은 구간을 반복하고 있어.,grief,scene_enter,CS012_002,True
+CS012_002,CS012,TK01,돌아오고 계신 줄 알았어.,grief,previous_complete,CS012_003,True
+CS012_003,CS012,ST01,그는 다른 사람을 먼저 보냈다. 마지막까지.,restrained,previous_complete,CS012_004,True
+CS012_004,CS012,TK01,그럼 남은 길은 우리가 이어야겠네요.,resolve,previous_complete,,True
+CS014_001,CS014,HR01,열이 계산보다 빨리 올라가. 중단 기준이야.,urgent,scene_enter,CS014_002,True
+CS014_002,CS014,TK01,알았어. 연결 끊는다.,focus,previous_complete,CS014_003,True
+CS014_003,CS014,SW01,네 방법이 옳아도 완성될 때까지 죽는 사람은 누가 책임지지?,firm,previous_complete,CS014_004,True
+CS014_004,CS014,TK01,그래서 범위와 중단 기준부터 공개하겠습니다.,resolve,previous_complete,,True
+CS017_001,CS017,MR01,세 군데 모두 접근권 확인됐어요. 지금 열립니다.,focus,scene_enter,CS017_002,True
+CS017_002,CS017,DY01,귀환로 확보. 네 쪽은 네가 봐. 이쪽은 내가 맡는다.,firm,previous_complete,CS017_003,True
+CS017_003,CS017,SR01,상태 숨기지 말아요. 보고 기다릴게요.,warm,previous_complete,CS017_004,True
+CS017_004,CS017,TK01,이번에는 전부 말하겠습니다.,resolve,previous_complete,,True
+CS018_001,CS018,TK01,"도윤 씨, 귀환로 넘깁니다.",focus,scene_enter,CS018_002,True
+CS018_002,CS018,DY01,받았다. 전원 이동 시작.,firm,previous_complete,CS018_003,True
+CS018_003,CS018,TK01,"하린아, 앵커 주기 부탁해.",focus,previous_complete,CS018_004,True
+CS018_004,CS018,HR01,동기화됐어. 오빠 출력 낮춰.,focus,previous_complete,CS018_005,True
+CS018_005,CS018,TK01,세라트. 방출 경로를.,focus,previous_complete,CS018_006,True
+CS018_006,CS018,ST01,열렸다. 우리 쪽도 함께 버틴다.,resolve,previous_complete,CS018_007,True
+CS018_007,CS018,SR01,"태경 씨, 들려요?",urgent,previous_complete,CS018_008,True
+CS018_008,CS018,TK01,들립니다. 마지막 것만 회수하고 갈게요.,resolve,previous_complete,,True
+CS019_001,CS019,TK01,안에 몇 명 있습니까?,neutral,scene_enter,CS019_002,True
+CS019_002,CS019,DY01,일곱 명이다.,neutral,previous_complete,CS019_003,True
+CS019_003,CS019,TK01,일곱 명. 확인했습니다.,relief,previous_complete,CS019_004,True
+CS019_004,CS019,NPC_CHILD,아저씨가 세상에서 제일 세요?,curious,previous_complete,CS019_005,True
+CS019_005,CS019,TK01,오늘 여기서는.,warm,previous_complete,CS019_006,True
+CS019_006,CS019,SR01,퇴근했어요?,warm,previous_complete,CS019_007,True
+CS019_007,CS019,TK01,네. 오늘은 끝났습니다.,relief,previous_complete,CS019_008,True
+CS019_008,CS019,HR01,저녁 식기 전에 와. 두 사람 다.,warm,previous_complete,,True

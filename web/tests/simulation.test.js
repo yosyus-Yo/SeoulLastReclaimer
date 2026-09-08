@@ -1,0 +1,10 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { initialState, move, tick, interact, nearby, shield, dash, nodes, anchor, free } from '../src/simulation.js';
+test('movement stays inside the street, including long dashes', () => { const s = initialState(); move(s, 100, 0); assert.ok(s.x <= 4.6); assert.ok(free(s.x, s.z)); move(s, 0, -100); assert.ok(s.z >= -19.7); });
+test('movement cannot tunnel through the delivery van', () => { const s = initialState(); s.x = 1; s.z = 13; move(s, 5, 0); assert.ok(s.x < 2.41); });
+test('recovery is local, capped, and cannot duplicate the same node', () => { const s = initialState(); assert.equal(interact(s), null); s.x = nodes[0].x; s.z = nodes[0].z; s.energy = 95; assert.equal(interact(s).index, 0); assert.equal(s.energy, 100); assert.equal(interact(s), null); });
+test('anchor requires recovered signals, defeated threats, and completes once', () => { const s = initialState(); Object.assign(s, anchor); assert.equal(nearby(s), null); s.recovered.fill(true); assert.equal(interact(s).kind, 'unsafe'); assert.equal(s.complete, false); s.enemies.forEach(e => { e.hp = 0; }); assert.equal(interact(s).kind, 'anchor'); assert.ok(s.complete); assert.equal(interact(s), null); });
+test('shield costs once and respects cooldown', () => { const s = initialState(); assert.ok(shield(s)); assert.equal(s.energy, 10); assert.equal(shield(s), false); assert.equal(s.energy, 10); });
+test('dash cannot retrigger until cooldown expires', () => { const s = initialState(); assert.ok(dash(s)); assert.equal(dash(s), false); for (let i = 0; i < 70; i++) tick(s, 1 / 60, { x: 0, z: 0 }); assert.ok(dash(s)); });
+test('normal walking is frame-rate independent', () => { const a = initialState(), b = initialState(); for (let i = 0; i < 60; i++) tick(a, 1/60, { x: 0, z: -1 }); for (let i = 0; i < 30; i++) tick(b, 1/30, { x: 0, z: -1 }); assert.ok(Math.abs(a.z - b.z) < 1e-9); });

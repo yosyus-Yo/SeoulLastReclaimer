@@ -1,0 +1,52 @@
+const alleyObstacles = [
+  { x: -4.2, z: 5, w: 1.3, d: 2.4 }, { x: 4.1, z: -4, w: 1.2, d: 2.8 },
+  { x: -4.25, z: -10, w: 1.1, d: 2 }, { x: 3.6, z: 13, w: 1.8, d: 3.5 },
+];
+export const zones = {
+  plaza: { id: 'plaza', name: '귀환광장', subtitle: '구로 임시 공동 방재거점', safe: true, bounds: { minX: -16, maxX: 16, minZ: -17, maxZ: 17 },
+    spawn: { x: 0, z: 12 }, aid: { x: 10, z: 8 }, anchor: { x: 0, z: -12 }, exit: { x: 0, z: 13 }, nodes: [],
+    obstacles: [{ x: 0, z: 0, w: 5.2, d: 5.2 }, { x: -10, z: -7, w: 3, d: 3 }, { x: 10, z: -7, w: 3, d: 3 }, { x: -10, z: 7, w: 3, d: 3 }],
+    npcs: [{ id: 'kiseok', name: '백기석', role: '회수반장', x: -3, z: 8 }, { id: 'seorin', name: '한서린', role: '응급의학과', x: 9, z: 4 }, { id: 'mira', name: '오미라', role: '계약·기록', x: -8, z: -2 }, { id: 'doyun', name: '강도윤', role: '현장지휘', x: 7, z: -10 }],
+    board: { x: 0, z: 6 }, supports: [], enemies: [], props: [],
+  },
+  logistics: { id: 'logistics', name: '구로 물류센터', subtitle: 'M001 · 일곱 명의 귀환', mission: 'M001', bounds: { minX: -4.9, maxX: 4.9, minZ: -20, maxZ: 20 },
+    spawn: { x: .6, z: 13 }, aid: { x: -3.1, z: 14.8 }, anchor: { x: 0, z: -18.5 }, exit: { x: 0, z: 17 },
+    nodes: [{ x: -1.1, z: 9, id: 'A-03' }, { x: 2.1, z: -1, id: 'B-07' }, { x: -1.7, z: -11, id: 'C-12' }],
+    obstacles: alleyObstacles, npcs: [], supports: [{ x: -2, z: -15 }, { x: 2, z: -15 }],
+    enemies: [{ id: 'EN01', kind: 'chaser', x: -.8, z: 5.8 }, { id: 'EN02', kind: 'ranged', x: 2, z: -5 }, { id: 'EN03', kind: 'chaser', x: -1.2, z: -14 }],
+    props: [{ id: 'CELL01', x: -3, z: 9.5, hp: 40 }, { id: 'CELL02', x: 3, z: -10, hp: 40 }],
+  },
+  school: { id: 'school', name: '구로새빛학교', subtitle: 'M002 · 학교의 안전선', mission: 'M002', bounds: { minX: -13, maxX: 13, minZ: -20, maxZ: 20 },
+    spawn: { x: 0, z: 16 }, aid: { x: 9, z: 14 }, anchor: { x: 0, z: -16 }, exit: { x: 0, z: 17 },
+    nodes: [{ x: -8, z: 7, id: '복도 A' }, { x: 8, z: 0, id: '복도 B' }, { x: -4, z: -11, id: '비상 방송' }],
+    obstacles: [{ x: -5, z: 1, w: 3.2, d: 2 }, { x: 5, z: 8, w: 3, d: 2 }, { x: 5, z: -6, w: 4, d: 2 }, { x: -10, z: -6, w: 2, d: 6 }],
+    npcs: [], supports: [{ x: -4, z: -14 }, { x: 4, z: -14 }],
+    enemies: [{ id: 'SCH01', kind: 'chaser', x: -6, z: 5 }, { id: 'SCH02', kind: 'ranged', x: 8, z: -5 }, { id: 'SCH03', kind: 'chaser', x: 0, z: -10 }],
+    props: [{ id: 'SCH-C1', x: -10, z: 11, hp: 40 }, { id: 'SCH-C2', x: 10, z: -12, hp: 40 }],
+  },
+  archive: { id: 'archive', name: '태산 기록 보관구역', subtitle: 'M003 · 남겨진 원본', mission: 'M003', bounds: { minX: -15, maxX: 15, minZ: -20, maxZ: 20 },
+    spawn: { x: 0, z: 16 }, aid: { x: -11, z: 14 }, anchor: { x: 0, z: -16 }, exit: { x: 0, z: 17 },
+    nodes: [{ x: -9, z: 5, id: '원본 기록 01' }, { x: 9, z: -2, id: '원본 기록 02' }, { x: -7, z: -12, id: '원본 기록 03' }],
+    obstacles: [{ x: -5, z: 4, w: 3, d: 7 }, { x: 5, z: -3, w: 3, d: 7 }, { x: -9, z: -4, w: 5, d: 2 }, { x: 9, z: 10, w: 3, d: 5 }],
+    npcs: [], supports: [], enemies: [{ id: 'ARC01', kind: 'chaser', x: -9, z: 8 }, { id: 'ARC02', kind: 'ranged', x: 10, z: -6 }, { id: 'ARC03', kind: 'chaser', x: -5, z: -14 }],
+    props: [{ id: 'ARC-C1', x: 3, z: 12, hp: 40 }, { id: 'ARC-C2', x: -12, z: -11, hp: 40 }],
+  },
+};
+export const zoneFor = id => zones[id || 'logistics'] || zones.logistics;
+export const missions = [
+  { id: 'M001', zone: 'logistics', name: '물류센터 귀환', giver: '백기석', requires: null, credits: 400, rescued: 7, defendSeconds: 12,
+    brief: '측정기는 안전을 가리키지만 잔향이 지하로 끌려가고 있다. 현장의 흔적을 조사하고, 두 지지점으로 통로를 고정한 뒤 일곱 명을 데리고 돌아와라.',
+    ending: '“숫자 맞았냐.” 기석의 물음에 태경은 일곱 명의 이름을 차례로 확인했다. 무전기 너머로 학교의 구조 요청이 들어왔다.' },
+  { id: 'M002', zone: 'school', name: '학교의 안전선', giver: '한서린', requires: 'M001', credits: 550, rescued: 12, defendSeconds: 16,
+    brief: '대피 훈련 중 실제 균열이 열렸다. 서린이 아이들을 돌보는 동안 세 복도의 신호를 확인하고 양쪽 지지점을 확보하라. 도윤의 팀이 올 때까지 대피선을 지켜야 한다.',
+    ending: '열두 명이 교문을 나섰다. 도윤은 태경이 만든 안전선을 보고 고개를 끄덕였다. 사고 보고서와 원본 계측값이 다르다는 미라의 연락이 도착했다.' },
+  { id: 'M003', zone: 'archive', name: '남겨진 원본', giver: '오미라', requires: 'M002', credits: 800, rescued: 0, defendSeconds: 0,
+    brief: '삭제되기 전의 앵커 원본 기록 세 개를 확보하라. 보관구역의 융합체를 저지하고 기록을 귀환광장으로 가져오면 사고 조작의 연결 고리를 증명할 수 있다.',
+    ending: '“치료비를 대주겠으니 기록을 넘기라고요?” 태경은 태산의 제안을 거절했다. 미라는 원본을 여러 곳에 보관했다. 버려진 사람들의 귀환방재는 여기서 시작된다.' },
+];
+export const sideQuests = [
+  { id: 'SQ01', name: '두고 온 장비', giver: 'kiseok', zone: 'logistics', credits: 80, description: '회수반이 남긴 공구함 두 개를 찾아 백기석에게 보고한다.', points: [{ x: -3, z: 2, id: 'tool-1' }, { x: 3, z: -8, id: 'tool-2' }] },
+  { id: 'SQ02', name: '응급실까지 닿는 손', giver: 'seorin', zone: 'school', credits: 120, description: '학교에 흩어진 응급 보급품 세 개를 확보해 한서린에게 전달한다.', points: [{ x: -10, z: 13, id: 'med-1' }, { x: 10, z: 3, id: 'med-2' }, { x: -9, z: -14, id: 'med-3' }] },
+  { id: 'SQ03', name: '명단에서 지워진 이름', giver: 'mira', zone: 'archive', credits: 150, description: '누락된 노동자 명패 세 개를 찾아 미라에게 보상 근거를 전달한다.', points: [{ x: -12, z: 8, id: 'name-1' }, { x: 10, z: -9, id: 'name-2' }, { x: 1, z: -14, id: 'name-3' }] },
+  { id: 'SQ04', name: '광장에 다시 켜진 불', giver: 'doyun', zone: 'plaza', credits: 60, description: '광장 배전함 세 곳을 복구하고 강도윤에게 보고한다.', points: [{ x: -13, z: 10, id: 'power-1' }, { x: 13, z: -1, id: 'power-2' }, { x: -5, z: -13, id: 'power-3' }] },
+];

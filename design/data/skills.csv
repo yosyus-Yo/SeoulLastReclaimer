@@ -1,0 +1,9 @@
+﻿id,name_ko,energy_cost,cooldown_s,coefficient,range_m,duration_s,unlock_mission,slot_type
+SK001,파편격,0,0,1,2.2,0,,common
+SK002,회수,0,0,0,6,0.4,,common
+SK003,잔금막,20,8,0,3,3,M001,active
+SK004,견인선,12,4,1.2,8,0,M001,active
+SK005,반납,30,6,3,10,0,M006,active
+SK006,해체점,25,10,2,7,0,M009,active
+SK007,귀환로,35,15,0,12,8,M012,active
+SK008,회수권역,60,30,0,9,10,M015,ultimate

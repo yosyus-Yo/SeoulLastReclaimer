@@ -1,0 +1,44 @@
+﻿id,type,file,name_ko,trigger,loop,bpm,channels,sample_hz,bit_depth,variants,scope,status
+AU001,BGM,aud_bgm_hub.wav,거점,hub,True,76,2,48000,24,1,VS,Planned
+AU002,BGM,aud_bgm_industrial.wav,산업 탐색,industrial,True,96,2,48000,24,1,VS,Planned
+AU003,BGM,aud_bgm_boss.wav,보스 전투,boss,True,120,2,48000,24,1,VS,Planned
+AU004,BGM,aud_bgm_refuge.wav,피난 도시,refuge,True,68,2,48000,24,1,Full,Planned
+AU005,BGM,aud_bgm_experiment.wav,실험,experiment,True,104,2,48000,24,1,Full,Planned
+AU006,BGM,aud_bgm_final.wav,최종전,final,True,128,2,48000,24,1,Full,Planned
+AU007,BGM,aud_bgm_homecoming.wav,귀환,homecoming,True,76,2,48000,24,1,VS,Planned
+AU008,SFX,aud_sfx_reclaim_start.wav,회수 시작,reclaim_start,False,0,1,48000,24,1,VS,Planned
+AU009,SFX,aud_sfx_reclaim_loop.wav,회수 유지,reclaim_loop,True,0,1,48000,24,1,VS,Planned
+AU010,SFX,aud_sfx_reclaim_end.wav,회수 종료,reclaim_end,False,0,1,48000,24,1,VS,Planned
+AU011,SFX,aud_sfx_reclaim_full.wav,에너지 포화,reclaim_full,False,0,1,48000,24,1,VS,Planned
+AU012,SFX,aud_sfx_shield_cast.wav,잔금막 생성,shield_cast,False,0,1,48000,24,1,VS,Planned
+AU013,SFX,aud_sfx_shield_hit.wav,방벽 피격,shield_hit,False,0,1,48000,24,1,VS,Planned
+AU014,SFX,aud_sfx_shield_break.wav,방벽 붕괴,shield_break,False,0,1,48000,24,1,VS,Planned
+AU015,SFX,aud_sfx_tether_cast.wav,견인 연결,tether_cast,False,0,1,48000,24,1,VS,Planned
+AU016,SFX,aud_sfx_tether_pull.wav,견인 이동,tether_pull,False,0,1,48000,24,1,VS,Planned
+AU017,SFX,aud_sfx_return.wav,반납 발사,return,False,0,1,48000,24,1,VS,Planned
+AU018,SFX,aud_sfx_disrupt.wav,해체점,disrupt,False,0,1,48000,24,1,VS,Planned
+AU019,SFX,aud_sfx_route.wav,귀환로 생성,route,False,0,1,48000,24,1,VS,Planned
+AU020,SFX,aud_sfx_field.wav,권역 연결,field,False,0,1,48000,24,1,VS,Planned
+AU021,SFX,aud_sfx_dodge.wav,회피,dodge,False,0,1,48000,24,1,VS,Planned
+AU022,SFX,aud_sfx_hit.wav,피격,hit,False,0,1,48000,24,1,VS,Planned
+AU023,SFX,aud_sfx_foot_asphalt.wav,아스팔트 발소리,foot_asphalt,False,0,1,48000,24,3,VS,Planned
+AU024,SFX,aud_sfx_foot_metal.wav,금속 발소리,foot_metal,False,0,1,48000,24,3,VS,Planned
+AU025,SFX,aud_sfx_foot_concrete.wav,콘크리트 발소리,foot_concrete,False,0,1,48000,24,3,VS,Planned
+AU026,SFX,aud_sfx_boss_warning.wav,보스 예고,boss_warning,False,0,1,48000,24,1,VS,Planned
+AU027,SFX,aud_sfx_forklift.wav,보스 엔진,forklift,False,0,1,48000,24,1,VS,Planned
+AU028,SFX,aud_sfx_collapse.wav,붕괴,collapse,False,0,1,48000,24,1,VS,Planned
+AU029,UI,aud_ui_focus.wav,포커스,focus,False,0,1,48000,24,1,VS,Planned
+AU030,UI,aud_ui_confirm.wav,확인,confirm,False,0,1,48000,24,1,VS,Planned
+AU031,UI,aud_ui_deny.wav,입력 거절,deny,False,0,1,48000,24,1,VS,Planned
+AU032,UI,aud_ui_save.wav,저장 완료,save,False,0,1,48000,24,1,VS,Planned
+AU033,AMB,aud_amb_rain.wav,빗물,rain,True,0,2,48000,24,1,VS,Planned
+AU034,AMB,aud_amb_subway.wav,지하철 환경,subway,True,0,2,48000,24,1,Full,Planned
+AU035,AMB,aud_amb_anchor.wav,앵커 공진,anchor,True,0,2,48000,24,1,VS,Planned
+AU036,VO,vo_tk01_lineid.wav,TK01 대사 묶음,dialogue_id,False,0,1,48000,24,1,VS,Planned
+AU037,VO,vo_sr01_lineid.wav,SR01 대사 묶음,dialogue_id,False,0,1,48000,24,1,VS,Planned
+AU038,VO,vo_bk01_lineid.wav,BK01 대사 묶음,dialogue_id,False,0,1,48000,24,1,VS,Planned
+AU039,VO,vo_hr01_lineid.wav,HR01 대사 묶음,dialogue_id,False,0,1,48000,24,1,Full,Planned
+AU040,VO,vo_dy01_lineid.wav,DY01 대사 묶음,dialogue_id,False,0,1,48000,24,1,Full,Planned
+AU041,VO,vo_mr01_lineid.wav,MR01 대사 묶음,dialogue_id,False,0,1,48000,24,1,Full,Planned
+AU042,VO,vo_sw01_lineid.wav,SW01 대사 묶음,dialogue_id,False,0,1,48000,24,1,Full,Planned
+AU043,VO,vo_st01_lineid.wav,ST01 대사 묶음,dialogue_id,False,0,1,48000,24,1,Full,Planned

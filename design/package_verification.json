@@ -1,0 +1,13 @@
+{
+  "scope": "Document package verification, not game QA",
+  "errors": [],
+  "documents": 29,
+  "art_boards": 10,
+  "diagrams": 7,
+  "missions": 18,
+  "dialogue_lines": 60,
+  "backlog_records": 35,
+  "reader_live_browser_test": "Blocked by local file URL policy; not performed",
+  "word_render": "Two pages inspected with Korean glyphs",
+  "workbook_recalculation": "Artifact Tool tested, native Excel UI not tested"
+}

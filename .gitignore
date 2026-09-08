@@ -1,0 +1,27 @@
+/Unity/Library/
+/Unity/Temp/
+/Unity/Obj/
+/Unity/Logs/
+/Unity/UserSettings/
+/Unity/Builds/
+/Unity/.vs/
+/Unity/*.csproj
+/Unity/*.sln*
+/tests/bin/
+/tests/obj/
+.DS_Store
+/web/node_modules/
+/web/dist/
+
+# Machine-local credentials, caches, and runtime output
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+*.pfx
+*.log
+__pycache__/
+.venv/

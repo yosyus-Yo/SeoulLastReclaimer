@@ -1,0 +1,106 @@
+[
+  {
+    "id": "kiseok",
+    "source": "kiseok-v1.png",
+    "file": "kiseok-cutout-v1.png",
+    "method": "local rembg",
+    "model": "birefnet-general-lite",
+    "width": 616,
+    "height": 1718,
+    "hasAlpha": true,
+    "transparentFraction": 0.4152,
+    "contentBox": [
+      16,
+      16,
+      600,
+      1702
+    ],
+    "footX": 301.48,
+    "footY": 1702,
+    "sourceBox": [
+      142,
+      10,
+      726,
+      1696
+    ],
+    "sha256": "3e59cc70d9c5dc3ad0f0c281640dd54a9ef72c39679b827e85432dece9046b6b"
+  },
+  {
+    "id": "seorin",
+    "source": "seorin-v1.png",
+    "file": "seorin-cutout-v1.png",
+    "method": "local rembg",
+    "model": "birefnet-general-lite",
+    "width": 587,
+    "height": 1680,
+    "hasAlpha": true,
+    "transparentFraction": 0.4809,
+    "contentBox": [
+      16,
+      16,
+      571,
+      1664
+    ],
+    "footX": 247.95,
+    "footY": 1664,
+    "sourceBox": [
+      185,
+      56,
+      740,
+      1704
+    ],
+    "sha256": "300268d97940d7aa07249634f53fe7449bfbbf76a17aa332eb7d4f62906fcfed"
+  },
+  {
+    "id": "mira",
+    "source": "mira-v1.png",
+    "file": "mira-cutout-v1.png",
+    "method": "local rembg",
+    "model": "birefnet-general-lite",
+    "width": 465,
+    "height": 1523,
+    "hasAlpha": true,
+    "transparentFraction": 0.4659,
+    "contentBox": [
+      16,
+      16,
+      449,
+      1507
+    ],
+    "footX": 223.7,
+    "footY": 1507,
+    "sourceBox": [
+      320,
+      20,
+      753,
+      1511
+    ],
+    "sha256": "db97be32c3835e939e054fd7df8a8c8d1f5ab5a01fb521daece8a9ce94fd2826"
+  },
+  {
+    "id": "doyun",
+    "source": "doyun-v1.png",
+    "file": "doyun-cutout-v1.png",
+    "method": "local rembg",
+    "model": "birefnet-general-lite",
+    "width": 558,
+    "height": 1599,
+    "hasAlpha": true,
+    "transparentFraction": 0.4755,
+    "contentBox": [
+      16,
+      16,
+      542,
+      1583
+    ],
+    "footX": 279.82,
+    "footY": 1583,
+    "sourceBox": [
+      209,
+      43,
+      735,
+      1610
+    ],
+    "sha256": "fb397a24e9e35cb5798563fee753f9d2c1d1e91843784f8849ba4230799d6f86"
+  }
+]

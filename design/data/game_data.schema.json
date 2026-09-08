@@ -1,0 +1,319 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "contentVersion",
+    "settings",
+    "skills",
+    "enemies",
+    "missions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "contentVersion": {
+      "type": "string"
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "base_hp",
+        "hp_per_level",
+        "base_attack",
+        "attack_per_level",
+        "max_level",
+        "base_xp",
+        "xp_step",
+        "move_speed_mps",
+        "energy_max",
+        "energy_start",
+        "stamina_max",
+        "dodge_cost",
+        "stamina_regen_per_s",
+        "stamina_regen_delay_s",
+        "attack_interval_s",
+        "effective_uptime",
+        "dodge_distance_m",
+        "dodge_duration_s",
+        "iframe_start_s",
+        "iframe_end_s",
+        "residue_lifetime_s"
+      ],
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "base_hp": {
+          "type": "number",
+          "minimum": 0
+        },
+        "hp_per_level": {
+          "type": "number",
+          "minimum": 0
+        },
+        "base_attack": {
+          "type": "number",
+          "minimum": 0
+        },
+        "attack_per_level": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_level": {
+          "type": "number",
+          "minimum": 0
+        },
+        "base_xp": {
+          "type": "number",
+          "minimum": 0
+        },
+        "xp_step": {
+          "type": "number",
+          "minimum": 0
+        },
+        "move_speed_mps": {
+          "type": "number",
+          "minimum": 0
+        },
+        "energy_max": {
+          "type": "number",
+          "minimum": 0
+        },
+        "energy_start": {
+          "type": "number",
+          "minimum": 0
+        },
+        "stamina_max": {
+          "type": "number",
+          "minimum": 0
+        },
+        "dodge_cost": {
+          "type": "number",
+          "minimum": 0
+        },
+        "stamina_regen_per_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "stamina_regen_delay_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "attack_interval_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "effective_uptime": {
+          "type": "number",
+          "minimum": 0
+        },
+        "dodge_distance_m": {
+          "type": "number",
+          "minimum": 0
+        },
+        "dodge_duration_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "iframe_start_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "iframe_end_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "residue_lifetime_s": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name_ko",
+          "energy_cost",
+          "cooldown_s",
+          "coefficient",
+          "range_m",
+          "duration_s",
+          "unlock_mission",
+          "slot_type"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^SK[0-9]{3}$"
+          },
+          "name_ko": {
+            "type": "string"
+          },
+          "energy_cost": {
+            "type": "number",
+            "minimum": 0
+          },
+          "cooldown_s": {
+            "type": "number",
+            "minimum": 0
+          },
+          "coefficient": {
+            "type": "number",
+            "minimum": 0
+          },
+          "range_m": {
+            "type": "number",
+            "minimum": 0
+          },
+          "duration_s": {
+            "type": "number",
+            "minimum": 0
+          },
+          "unlock_mission": {
+            "type": "string"
+          },
+          "slot_type": {
+            "enum": [
+              "common",
+              "active",
+              "ultimate"
+            ]
+          }
+        }
+      }
+    },
+    "enemies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name_ko",
+          "hp",
+          "armor",
+          "attack",
+          "telegraph_s",
+          "residue_energy",
+          "alloy_probability",
+          "research_probability"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^(EN|BS)[0-9]{3}$"
+          },
+          "name_ko": {
+            "type": "string"
+          },
+          "hp": {
+            "type": "number",
+            "minimum": 1
+          },
+          "armor": {
+            "type": "number",
+            "minimum": 0
+          },
+          "attack": {
+            "type": "number",
+            "minimum": 0
+          },
+          "telegraph_s": {
+            "type": "number",
+            "minimum": 0
+          },
+          "residue_energy": {
+            "type": "number",
+            "minimum": 0
+          },
+          "alloy_probability": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "research_probability": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "missions": {
+      "type": "array",
+      "minItems": 18,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "chapter",
+          "level_id",
+          "name_ko",
+          "recommended_level",
+          "credits",
+          "xp",
+          "required_rescues",
+          "boss_id",
+          "objective",
+          "target_minutes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^M[0-9]{3}$"
+          },
+          "chapter": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6
+          },
+          "level_id": {
+            "type": "string",
+            "pattern": "^LV[0-9]{3}$"
+          },
+          "name_ko": {
+            "type": "string"
+          },
+          "recommended_level": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "credits": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "xp": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "required_rescues": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "boss_id": {
+            "type": "string"
+          },
+          "objective": {
+            "type": "string"
+          },
+          "target_minutes": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}

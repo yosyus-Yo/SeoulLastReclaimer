@@ -1,0 +1,76 @@
+/* Field journal: shared scroll treatment and stable card slots. */
+.journal,
+.journal .card-description {
+  scrollbar-width: thin;
+  scrollbar-color: #8ba28a #14282e;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+}
+.journal { overflow-x: hidden; overflow-y: auto; }
+.journal::-webkit-scrollbar,
+.journal .card-description::-webkit-scrollbar { width: 8px; }
+.journal::-webkit-scrollbar-track,
+.journal .card-description::-webkit-scrollbar-track { background: #14282e; }
+.journal::-webkit-scrollbar-thumb,
+.journal .card-description::-webkit-scrollbar-thumb {
+  background: #8ba28a;
+  border: 2px solid #14282e;
+  border-radius: 6px;
+}
+.journal::-webkit-scrollbar-thumb:hover,
+.journal .card-description::-webkit-scrollbar-thumb:hover { background: #c7d7b8; }
+.journal::-webkit-scrollbar-corner { background: #14282e; }
+
+.journal #mission-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.journal #quest-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.journal .mission-card,
+.journal .quest-card {
+  display: grid;
+  grid-template-rows: 16px 48px minmax(0, 1fr) 78px;
+  gap: 12px;
+  min-width: 0;
+  height: 360px;
+  padding: 16px;
+}
+.journal .quest-card { height: 300px; }
+.journal .mission-card > p,
+.journal .quest-card > p { margin: 0; line-height: 16px; }
+.journal .mission-card h3,
+.journal .quest-card h3 { margin: 0; line-height: 1.4; align-self: start; word-break: keep-all; }
+.journal .card-description {
+  min-height: 0;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  padding-right: 5px;
+  font-size: 12px;
+  line-height: 1.85;
+}
+.journal .card-description:focus-visible { outline: 1px solid var(--cyan); outline-offset: 3px; }
+.journal .mission-card footer,
+.journal .quest-card footer {
+  display: grid;
+  grid-template-rows: 24px 44px;
+  gap: 10px;
+  margin: 0;
+  align-items: stretch;
+  justify-content: stretch;
+}
+.journal footer > span { display: flex; align-items: center; line-height: 1.5; }
+.journal .card-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.journal .quest-card .card-actions { grid-template-columns: minmax(0, 1fr); }
+.journal .card-actions > button { width: 100%; min-width: 0; margin: 0; padding: 8px; line-height: 1.4; }
+.journal .card-actions > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 8px;
+  text-align: center;
+  border: 1px solid #a0c1ab33;
+  background: #12282b80;
+  color: #b8cbb6;
+  line-height: 1.5;
+}
+@media (max-width: 750px) {
+  .journal #mission-list,
+  .journal #quest-list { grid-template-columns: minmax(0, 1fr); }
+}

@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "0.1",
+  "saveId": "slot1",
+  "committedTransactions": [],
+  "campaign": {
+    "currentMission": "M001",
+    "completed": []
+  },
+  "player": {
+    "level": 1,
+    "xp": 0,
+    "energy": 30,
+    "hp": 120,
+    "equippedSkills": [
+      "SK003",
+      "SK004"
+    ],
+    "unlockedSkills": [
+      "SK001",
+      "SK002"
+    ]
+  },
+  "inventory": {
+    "credits": 0,
+    "alloy": 0,
+    "research": 0,
+    "items": []
+  },
+  "checkpoint": {
+    "id": "CP1",
+    "instanceId": "M001-example-001",
+    "consumedTokenIds": [],
+    "objectives": {
+      "rescue": 0
+    },
+    "temporaryRewards": {},
+    "loanedSkills": [
+      "SK003",
+      "SK004"
+    ]
+  },
+  "settings": {
+    "subtitles": true,
+    "shake": 0.5
+  }
+}

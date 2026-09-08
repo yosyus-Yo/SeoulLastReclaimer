@@ -1,0 +1,1 @@
+{"name":"SLR.Editor","rootNamespace":"SLR.Editor","references":["SLR.Runtime","SLR.Domain","Unity.RenderPipelines.Universal.Runtime","Unity.RenderPipelines.Core.Runtime"],"includePlatforms":["Editor"]}

@@ -1,0 +1,74 @@
+[
+  [
+    "tk",
+    {
+      "prompt": "Create one polished high resolution landscape character development sheet for an original Korean modern supernatural 2.5D action RPG titled SEOUL LAST RECLAIMER. Character TK01 Yoon Taekyung, Korean man age 27, 178 cm, lean practical worker build, tired dark brown eyes, short slightly messy black hair, no beard. Dark charcoal navy work jacket with muted orange reflective safety bands on shoulders, slate cargo trousers, reinforced black safety boots, asymmetric industrial RECLAMATION GAUNTLET on LEFT forearm with tiny cyan white segmented light, right hand plain work glove, utility belt. Grounded semi-stylized 3D game concept art, readable silhouette, realistic clothing construction, not superhero armor, no sword. Warm light grey editorial board. MAIN UPPER ROW four full body views FRONT LEFT SIDE BACK and THREE QUARTER of EXACT SAME OUTFIT same scale on a shared baseline, at rest A pose, front and rear views truly respective views. LOWER ROW three black silhouette exploration thumbnails A B C then three small jacket palette variants navy orange / slate cyan / olive cream; LEFTMOST NAVY ORANGE is selected main design. Right lower area enlarged left gauntlet, belt fastener and sole of safety boot detail sketches. English short labels only. Crisp detailed design, full feet and heads in frame, ample spacing, no overlapping figures, no decorative text. This is an ART CONCEPT BOARD not an actual screenshot or verified orthographic model. Output actual image file."
+    }
+  ],
+  [
+    "tk_pose",
+    {
+      "referenced_image_paths": [
+        "/Users/seohun/.codex/generated_images/01a06a63-18ce-70c2-9fd9-ee7783d9b47f/exec-d1d15546-9d14-4de9-beb6-30b8a63c97e6.png"
+      ],
+      "prompt": "Use provided TK01 character board as identity and clothing reference. Create a NEW separate landscape expression and action sheet of exactly this Korean 27 year old worker protagonist. Keep short black hair, charcoal navy jacket with orange reflective strips, LEFT ARM cyan reclamation gauntlet, practical boots. Semi-stylized 3D game concept art light grey studio background. Top row six expressive closeups labeled NEUTRAL FOCUS FEAR ANGER GRIEF RELIEF. Lower area four full body clearly separated readable action poses labeled RUN EVADE RECLAIM SHIELD: sprinting, side dodge, left gauntlet attracting cyan shards, planting feet with left forearm projecting layered shield. Entire body visible in each pose. Add three small numbered rough gesture sketches. No giant weapons. Do not recreate original board; a dedicated expressions and action poses sheet."
+    }
+  ],
+  [
+    "cast",
+    {
+      "prompt": "Create high resolution landscape production concept art lineup board for original modern Korean supernatural action RPG SEOUL LAST RECLAIMER. Grounded semi stylized 3D characters on pale grey background, seven full body figures on shared ground baseline, clear space no overlaps. Left to right: SR01 Han Seorin Korean woman 29 170cm dark tied hair teal navy paramedic jacket with ivory panels and medical pack flat boots calm; HR01 Yoon Harin Korean woman 22 163cm bob haircut pale olive hooded jacket tablet hearing protection engineer; DY01 Kang Doyoon Korean man31 185cm athletic short hair graphite rescue harness rust orange shoulder panels gauntlets; MR01 Oh Mira Korean woman35 168cm short neat black hair dark brown practical business suit notebook low heel boots; BK01 Baek Giseok Korean man54 173cm weathered face orange worn safety vest over navy workwear tool belt flashlight; SW01 Lee Sunwoo Korean man46 182cm tailored graphite technical coat sharp restrained silhouette white segmented boundary emitters; ST01 Serat alien diplomat 210cm tall slender basalt ceramic layered body asymmetric floating ivory face plates three elongated arms no human skin faint amber glowing joints. Height tick lines backdrop, visibly varying heights. English IDs and name short labels below feet only. Lower small swatch palette per character and tiny black silhouette versions. Functional contemporary clothes no medieval fantasy armor no sexualization. This is character concept height lineup, not screenshot."
+    }
+  ],
+  [
+    "environment",
+    {
+      "prompt": "Produce a polished landscape environment concept board for an original modern Seoul supernatural 2.5D action RPG. Four equally sized spacious panels, each independently composited fixed isometric-ish quarter-view 35deg downward, realistic proportions with simplified game-ready readable shapes and painterly PBR finish. PANEL1 GURO ALLEY wet Seoul industrial alley convenience shop generic Korean signage shutters delivery crates fire engine at street end; ordinary city 80 percent cyan-white supernatural shard residue 20 percent, one small dark navy orange workwear male hero. PANEL2 WAREHOUSE forklift loading pallets conveyor steel roof beams localized floating debris cyan fracture, readable combat floor. PANEL3 SUBWAY PLATFORM Korean metro platform screen doors emergency lights warm white safe route icons, restrained violet impossible reflection. PANEL4 ANCHOR FACILITY underground modern electrical substation cables transformer and concrete catwalk, thin cyan geometric circuits, suspended concrete ring. Navy slate concrete grey rust orange cyan ivory palette. No medieval elements no futuristic megacity no giant neon billboards. Short English panel labels only. No HUD. Concept art, not actual rendered game screenshot."
+    }
+  ],
+  [
+    "medical_models",
+    {
+      "referenced_image_paths": [
+        "/Users/seohun/.codex/generated_images/01a06a63-18ce-70c2-9fd9-ee7783d9b47f/exec-912bb37a-d489-4773-b4dd-50ad89363ffd.png"
+      ],
+      "prompt": "Create a NEW separate high-resolution 3072x2048 landscape model reference board for exactly the FIRST TWO characters in reference, modern Korean supernatural game. TOP ROW SR01 Han Seorin age29 170cm tied black hair teal navy paramedic jacket ivory panels and medical bag, four full body neutral A pose FRONT SIDE BACK THREE QUARTER of exact same outfit. LOWER ROW HR01 Yoon Harin age22 163cm black bob hair olive hooded work jacket dark trousers tablet and yellow ear defenders at neck, same four full body views. Exactly eight figures all heads/feet visible, consistent clothing and real proportions. Warm grey background, semi stylized 3D game concept art. Short English labels only. Small medical pack and tablet detail inset between rows. Functional shoes no high heels for these two. Keep identity matching reference. Anatomical model concept not certified orthographic production geometry."
+    }
+  ],
+  [
+    "team_models",
+    {
+      "referenced_image_paths": [
+        "/Users/seohun/.codex/generated_images/01a06a63-18ce-70c2-9fd9-ee7783d9b47f/exec-912bb37a-d489-4773-b4dd-50ad89363ffd.png"
+      ],
+      "prompt": "NEW separate large landscape model sheet of three characters from reference. Three horizontal bands: DY01 Kang Doyoon 31 tall185cm athletic male graphite rescue harness rust orange shoulders; MR01 Oh Mira 35 female168cm short neat hair dark brown suit with notebook; BK01 Baek Giseok 54 male173cm weathered face navy workwear worn orange vest flashlight. Each band FOUR entire body views FRONT SIDE BACK THREE QUARTER neutral A pose and same costume, crisp readable accurately matched accessories. Total12 figures no overlaps. Light grey background semi stylized 3D production concept art. Tiny English view labels, identity consistent with supplied lineup, not medieval/sci-fi armor. Very high resolution."
+    }
+  ],
+  [
+    "boundary_models",
+    {
+      "referenced_image_paths": [
+        "/Users/seohun/.codex/generated_images/01a06a63-18ce-70c2-9fd9-ee7783d9b47f/exec-912bb37a-d489-4773-b4dd-50ad89363ffd.png"
+      ],
+      "prompt": "NEW separate landscape 3D game character model concept sheet use final two characters of reference. TOP ROW SW01 Lee Sunwoo Korean man46 182cm tailored graphite technical coat white segmented wrist boundary emitters, FOUR fullbody FRONT SIDE BACK THREE QUARTER consistent outfit neutral A pose. BOTTOM ROW ST01 Serat 210cm alien tall slender basalt ceramic layered body ivory floating faceplates amber joints and THREE asymmetrical arms, exactly three arms each view, FOUR fullbody FRONT SIDE BACK THREE QUARTER. Anatomy diagram small showing third arm attachment at right flank beneath main arm, preserve this rule all views. Light grey background, refined semi stylized 3D, clear silhouettes no text besides short English ID/view labels. No visual overlaps no cutoff feet."
+    }
+  ],
+  [
+    "enemy",
+    {
+      "prompt": "High resolution landscape enemy and boss design board for original Korean contemporary supernatural action RPG Seoul Last Reclaimer. Pale neutral background, grounded semi stylized 3D concept art. Top 65 percent: BS001 boss an industrial yellow orange forklift fused with dark fractured concrete anchor ring and cyan unstable reactor, unmanned, no human gore. THREE CLEAR VIEWS front leftside and threequarter, plus enlarged reactor weakpoint and fork joint mechanics. Believable forklift wheels and safety cage, broken pallets for scale. Bottom strip five separated enemy thumbnail designs EN001 low quadruped asphalt shard crawler, EN002 suspended industrial ceramic mortar organism, EN003 corporate human riot shield unit practical navy safety armor, EN004 taut cable spider four primary legs, EN005 tall folded signpost mimic. Arrows cyan for weakpoints orange for attack surfaces. Short English ID labels only. Original design no brand logos no medieval armor."
+    }
+  ],
+  [
+    "vfx",
+    {
+      "prompt": "Landscape VFX production concept board for original modern Korean 2.5D action game. Dark graphite background with 8 large clear cells in a 4 by2 grid. Each cell shows a sequence of 3 small successive effect stages with arrows, on same small simple grey concrete ground. Labels SCAN, RECLAIM, LAYER SHIELD, TETHER, RETURN, DISASSEMBLE, SAFE ROUTE, RECLAIM FIELD. Cyan white thin engineering lines and angular fragments, muted orange only for enemy warnings. RECLAIM fragments accelerate inward to left hand not outward explosion. LAYER SHIELD thin glasslike staggered planes spread incoming hit sideways. TETHER taut cyan cable. DISASSEMBLE segments unlock starting at highlighted joint. SAFE ROUTE warm white dotted human escape corridor. FIELD fine circuit lines spread across ground with large readable central actor silhouette. No round medieval runes no fireball art no bloom washing out outlines. Crisp readable thumbnail execution references not gameplay screenshot."
+    }
+  ],
+  [
+    "storyboard",
+    {
+      "prompt": "Create a 6-panel cinematic storyboard landscape board original Korean modern supernatural game intro. Restrained grayscale pencil storyboard with selective orange safety strips and cyan magic, each panel 16:9 inside clear 3columns2rows grid and short English shot labels only. Consistent protagonist young Korean man black hair navy industrial jacket orange safety strips LEFT FOREARM gauntlet. Panel1 WIDE wet Guro industrial alley firetruck and warehouse doorway; panel2 CLOSEUP older Korean recovery foreman with worn orange safety vest counting seven workers on paper; panel3 INSERT protagonist left glove cyan dust traveling backwards up from ground; panel4 WIDE warehouse roof bending and forklift reactor appearing below, no gore; panel5 ACTION protagonist left gauntlet layers a translucent shield holding up fallen beam while silhouetted workers escape; panel6 MEDIUM protagonist and foreman outside beside rescue vehicle, foreman checks list seven boxes. Actual storyboard drawing with camera arrows and framing, no photoreal game screenshot no excessive labels."
+    }
+  ]
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "id": "kiseok",
+    "file": "web/public/assets/npcs/kiseok-v1.png",
+    "method": "built-in image_gen",
+    "date": "2026-09-08",
+    "width": 887,
+    "height": 1774,
+    "hasAlpha": false,
+    "bytes": 1737224,
+    "sha256": "2cdc67109de8267bb1257b183270642047a4022565f8ffdef9743dc0251f5ad6",
+    "status": "Generated original retained; processed cutout recorded in cutouts.json",
+    "prompt": "design/art/npc-redesign-v1/prompts.json"
+  },
+  {
+    "id": "seorin",
+    "file": "web/public/assets/npcs/seorin-v1.png",
+    "method": "built-in image_gen",
+    "date": "2026-09-08",
+    "width": 864,
+    "height": 1821,
+    "hasAlpha": false,
+    "bytes": 1473619,
+    "sha256": "2da6f58b686bab08bf09e0ac0e42c5601123534dbdbe8afe90673cb31693386a",
+    "status": "Generated original retained; processed cutout recorded in cutouts.json",
+    "prompt": "design/art/npc-redesign-v1/prompts.json"
+  },
+  {
+    "id": "mira",
+    "file": "web/public/assets/npcs/mira-v1.png",
+    "method": "built-in image_gen",
+    "date": "2026-09-08",
+    "width": 1024,
+    "height": 1536,
+    "hasAlpha": false,
+    "bytes": 1463868,
+    "sha256": "1f164629e5b4252add7241e32832c1dc4c7a8b85540849b24ff2200310e626bc",
+    "status": "Generated original retained; processed cutout recorded in cutouts.json",
+    "prompt": "design/art/npc-redesign-v1/prompts.json"
+  },
+  {
+    "id": "doyun",
+    "file": "web/public/assets/npcs/doyun-v1.png",
+    "method": "built-in image_gen",
+    "date": "2026-09-08",
+    "width": 907,
+    "height": 1734,
+    "hasAlpha": false,
+    "bytes": 1554860,
+    "sha256": "a207a9ffbd67612fd338b5f38ed0eb9e718da298f0fda82a13e267dc813911b0",
+    "status": "Generated original retained; processed cutout recorded in cutouts.json",
+    "prompt": "design/art/npc-redesign-v1/prompts.json"
+  }
+]

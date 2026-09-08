@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111d22" />
+    <title>서울의 마지막 회수자 — 구로 현장 기록</title>
+  </head>
+  <body>
+    <canvas id="world" aria-label="구로 골목 3D 체험 화면. 우클릭 또는 WASD 이동, 좌클릭 공격, E 회수와 구급함, Q 정면 방어, Space 회피." tabindex="0"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="서울의 마지막 회수자 처음으로"><span class="brand-mark">↟</span><span>귀환<span class="brand-en">GUIHWAN · FIELD DIVISION</span></span></a>
+      <div class="location"><span class="live-dot"></span><span id="region-label">SEOUL / 귀환광장</span><span class="divider">/</span><span id="clock">05:42</span></div>
+      <nav aria-label="화면 설정"><button id="journal-open" class="icon-button" aria-label="임무·퀘스트 목록">J <span>임무</span></button><button id="npc-designs-open" class="icon-button" aria-label="광장 인물 디자인">♙ <span>인물</span></button><button id="hub-return" class="icon-button" aria-label="광장으로 귀환">⌂</button><button id="photo" class="icon-button" title="촬영 모드 · P" aria-pressed="false">◎ <span>촬영 모드</span></button><button id="settings-open" class="icon-button" aria-label="화면 설정">☷</button></nav>
+    </header>
+    <section id="intro" class="intro">
+      <p class="eyebrow"><span>01</span> 전투가 끝난 뒤에 들어가는 사람들</p>
+      <h1>서울의<br>마지막 회수자<span class="title-period">.</span></h1>
+      <div class="fine-rule"></div>
+      <p class="intro-copy">비가 그친 구로, 귀환광장.<br>동료들과 함께 돌아올 길을 만든다.</p>
+      <button id="enter" class="primary" disabled><span>현장 준비 중</span><span>↗</span></button>
+      <p class="intro-note">헤드폰을 쓰고, 천천히 둘러보세요.<br>실사풍 웹 3D 비주얼 테스트 · PC 키보드 권장</p>
+    </section>
+    <aside id="mission" class="mission hidden" aria-label="현재 현장 목표">
+      <p class="eyebrow" id="mission-zone">구로 임시 공동 방재거점</p>
+      <div class="health-block"><span>생명 <b id="hp">120 / 120</b></span><div><i id="hp-fill"></i></div><small id="guard-status">Q 잔금막 준비 · 에너지 20</small></div>
+      <h2 id="objective">골목에 남은 잔향을 회수하세요.</h2>
+      <div class="mission-progress"><span id="progress-count">00 <i>/ 03</i></span><div><i></i><i></i><i></i></div></div>
+      <p id="mission-note">빛나는 잔향 가까이에서 E</p>
+      <p id="combat-count">균열체 0 / 3 처리</p>
+    </aside>
+    <aside class="district" aria-label="현장 지도">
+      <p><span id="district-name">귀환광장</span><span>▧</span></p>
+      <svg id="zone-map" viewBox="0 0 150 160" aria-label="현재 구역 지도"></svg>
+      <div class="district-footer"><span>통제 구역</span><span>37.48° N</span></div>
+    </aside>
+    <div id="prompt" class="world-prompt hidden"><kbd>E</kbd><span>잔향 회수</span></div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <footer class="bottom-bar">
+      <div class="status-block"><span class="status-name">위상 에너지</span><strong id="energy">30<span> / 100</span></strong><div class="energy-track"><i id="energy-fill"></i></div></div>
+      <div class="controls"><span><kbd>우클릭</kbd><kbd>WASD</kbd> 이동</span><span><kbd>좌클릭</kbd> 공격</span><span><kbd>Shift</kbd> 달리기</span><span><kbd>E</kbd> 상호작용</span><span><kbd>Q</kbd> 방어</span><span><kbd>Space</kbd> 회피</span></div>
+      <button id="material-compare" class="compare" aria-pressed="false">◐ <span>기본 재질과 비교</span></button>
+    </footer>
+    <div class="technical"><span>CHAPTER 01 — 회수자의 이름</span><span id="fps">준비 중</span></div>
+    <div id="photo-hint" class="photo-hint hidden">드래그로 시점 회전 · 휠로 확대 · <kbd>P</kbd> 촬영 모드 종료</div>
+    <dialog id="settings" aria-labelledby="settings-title">
+      <div class="dialog-header"><p class="eyebrow">FIELD EQUIPMENT</p><button id="settings-close" class="icon-button" aria-label="설정 닫기">×</button></div>
+      <h2 id="settings-title">현장 화면 설정</h2>
+      <label>그래픽 품질<select id="quality"><option value="balanced">균형 · 권장 / 디테일과 부하 절충</option><option value="high">고화질 · 선명한 반사와 접촉 음영</option><option value="low">성능 우선 · 발열과 전력 절약</option></select></label>
+      <label>최대 프레임<select id="frame-limit"><option value="60">60 FPS · 부드러운 조작</option><option value="30">30 FPS · 노트북 / 저전력</option></select></label>
+      <p id="graphics-budget" class="settings-note" aria-live="polite"></p>
+      <label>새벽빛 <span id="light-value">45%</span><input id="light" type="range" min="0" max="100" value="45" /></label>
+      <label>노면의 젖은 정도 <span id="wet-value">75%</span><input id="wet" type="range" min="0" max="100" value="75" /></label>
+      <label class="toggle-row">환경음 <input id="sound" type="checkbox" checked /></label>
+      <p class="settings-note">품질과 최대 프레임은 이 브라우저에 저장됩니다. 설정창·메뉴는 최대 30 FPS, 숨겨진 탭은 렌더링을 멈춥니다. FPS는 현재 표시 프레임 수이며 CPU/GPU 사용률이 아닙니다. 느리거나 팬 소음이 크면 성능 우선·30 FPS로 낮춰주세요.</p>
+      <details><summary>사용한 아트와 데모 범위</summary><p>Poly Haven의 CC0 스캔 재질·HDRI와 Three.js 예제의 Mixamo 인물·모션을 사용합니다. 인물은 회수자 최종 모델이 아닌 임시 요원입니다. 골목 이동·회수와 기초 전투 체험이며, 전체 Unity 게임의 웹 이식본은 아닙니다. 좌클릭을 누르고 있으면 파편격을 반복합니다. 주황색 바닥은 적의 공격 예고이며, Q는 마우스 방향의 정면만 막습니다. 잔향 용기는 공격해 해체할 수 있고, 출발점의 구급함은 E로 한 번 사용할 수 있습니다.</p><a href="/assets/manifest.json" target="_blank" rel="noopener">에셋 출처와 파일 목록 ↗</a></details>
+    </dialog>
+    <dialog id="journal" class="journal" aria-labelledby="journal-speaker"><div class="dialog-header"><p class="eyebrow">CHAPTER 01 · 회수자의 이름</p><button id="journal-close" class="icon-button" aria-label="임무 목록 닫기">×</button></div><div class="dialogue-person"><div id="npc-portrait-frame" class="npc-portrait-frame" hidden><img id="npc-portrait" alt="" /></div><div><h2 id="journal-speaker">귀환 현장 게시판</h2><p id="npc-profile" class="npc-profile" hidden></p><p id="journal-dialogue"></p></div></div><p class="credits">활동 보상 <strong id="credits">0 C</strong></p><h3 class="section-label">주요 미션</h3><div id="mission-list"></div><h3 class="section-label">동료 의뢰</h3><div id="quest-list"></div><p class="settings-note">캠페인 완료·의뢰 진행·보상은 이 브라우저에 저장됩니다. 미완료 현장은 재출동 시 처음부터 시작합니다.</p></dialog>
+    <dialog id="npc-designs" class="npc-designs" aria-labelledby="npc-designs-title"><div class="dialog-header"><p class="eyebrow">GUIHWAN / CHARACTER DESIGN 01</p><button id="npc-designs-close" class="icon-button" aria-label="인물 디자인 닫기">×</button></div><h2 id="npc-designs-title">광장에서 만나는 사람들</h2><p class="settings-note">백기석·한서린·오미라·강도윤의 실사풍 전신 원화. 캐릭터를 누르면 큰 이미지로 볼 수 있습니다.</p><div id="npc-design-grid"></div><p class="settings-note">AI 생성 디자인 시안입니다. 전용 3D 메시·리그·표정 애니메이션의 제작 완료를 의미하지 않습니다.</p></dialog>
+    <dialog id="return-dialog" aria-labelledby="return-title"><h2 id="return-title">광장으로 돌아갈까요?</h2><p>미완료 현장의 적·조사·구조 진행은 재출동 시 초기화됩니다. 동료 의뢰 물품과 받은 보상은 보존됩니다.</p><div class="dialog-actions"><button id="return-cancel">현장에 남기</button><button id="return-confirm">광장으로 귀환</button></div></dialog>
+    <dialog id="mission-result" aria-labelledby="result-title"><p class="eyebrow">전원 귀환</p><h2 id="result-title"></h2><p id="result-text"></p><p id="result-reward"></p><div class="dialog-actions"><button id="result-stay">현장 더 살펴보기</button><button id="result-return">광장으로 복귀</button></div></dialog>
+    <dialog id="defeat" aria-labelledby="defeat-title"><p class="eyebrow">FIELD RECOVERY</p><h2 id="defeat-title">출동이 중단됐습니다.</h2><p>체력이 모두 소진됐습니다.<br>현재 미션의 적과 구조 진행을 초기 상태로 복원합니다.</p><button id="retry" class="primary"><span>다시 출동</span><span>↗</span></button></dialog>
+    <div id="loading" class="loading"><div class="loading-brand">귀환<span>현장을 확인하고 있습니다.</span></div><div class="loading-track"><i id="load-fill"></i></div><p id="load-label">도시의 표면과 빛을 불러오는 중</p></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

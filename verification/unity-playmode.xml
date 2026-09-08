@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-07 12:44:43Z" end-time="2026-09-07 12:44:43Z" duration="0.3139137">
+  <test-suite type="TestSuite" id="1008" name="서울의 마지막 회수자" fullname="서울의 마지막 회수자" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-07 12:44:43Z" end-time="2026-09-07 12:44:43Z" duration="0.313914" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1003" name="SLR.PlayModeTests.dll" fullname="/Users/seohun/Documents/에이전트/infiniteAgent/SeoulLastReclaimer/Unity/Library/ScriptAssemblies/SLR.PlayModeTests.dll" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-07 12:44:43Z" end-time="2026-09-07 12:44:43Z" duration="0.309168" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="45434" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1004" name="SLR" fullname="SLR" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-07 12:44:43Z" end-time="2026-09-07 12:44:43Z" duration="0.308751" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1005" name="Tests" fullname="SLR.Tests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-07 12:44:43Z" end-time="2026-09-07 12:44:43Z" duration="0.308517" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="BootstrapTests" fullname="SLR.Tests.BootstrapTests" classname="SLR.Tests.BootstrapTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-07 12:44:43Z" end-time="2026-09-07 12:44:43Z" duration="0.307802" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1002" name="BootstrapCreatesCameraAndPausedTitle" fullname="SLR.Tests.BootstrapTests.BootstrapCreatesCameraAndPausedTitle" methodname="BootstrapCreatesCameraAndPausedTitle" classname="SLR.Tests.BootstrapTests" runstate="Runnable" seed="815951611" result="Passed" start-time="2026-09-07 12:44:43Z" end-time="2026-09-07 12:44:43Z" duration="0.302162" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: /Users/seohun/Library/Application Support/SeoulLastReclaimer/서울의 마지막 회수자/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
