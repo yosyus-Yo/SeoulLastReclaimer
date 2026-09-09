@@ -7,6 +7,8 @@ import { zoneFor } from './zones.js';
 import { buildDistrict, buildBackdrop } from './districts.js';
 import { supportAt } from './collision-world.js';
 import { createTrainingBuilding } from './training-building-view.js';
+import { CharacterAnimator } from './character-animator.js';
+import { createClimbClip } from './climb-clip.js';
 
 const C = { cyan: 0xb9f5e8, metal: 0x424c4c, amber: 0xeebf79, plaster: 0xaaa79a };
 let seed = 137;
@@ -281,10 +283,13 @@ export async function makeWorld(scene, renderer, progress, zoneId = 'logistics')
     if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; o.frustumCulled = false; o.material.envMapIntensity = .65; }
     if (o.isBone && /LeftHand$/.test(o.name)) hand = o;
   });
-  const mixer = new THREE.AnimationMixer(soldier.scene); const actions = {};
+  const climbClip = createClimbClip(soldier.scene, soldier.animations.find(c => c.name === 'TPose'));
+  const animator = new CharacterAnimator(soldier.scene, [...soldier.animations, ...(climbClip ? [climbClip] : [])]);
   const poseBones = {};
   soldier.scene.traverse(o => { if (o.isBone) for (const name of ['LeftUpLeg', 'RightUpLeg', 'LeftLeg', 'RightLeg', 'LeftArm', 'RightArm', 'Spine']) if (o.name.endsWith(name)) poseBones[name] = o; });
-  for (const clip of soldier.animations) { if (clip.name === 'TPose') continue; const action = mixer.clipAction(clip); action.play(); action.setEffectiveWeight(clip.name === 'Idle' ? 1 : 0); actions[clip.name] = action; }
+  const poseRestore = Object.values(poseBones).map(bone => ({ bone, quaternion: bone.quaternion.clone() }));
+  let offsetApplied = false;
+  const facingAxis = new THREE.Vector3(0, 1, 0), facing = new THREE.Quaternion();
   const handGlow = new THREE.PointLight(C.cyan, 1.4, 1.7); handGlow.position.set(-.3, 1.05, .1); player.add(handGlow);
   const ringMaterial = new THREE.MeshBasicMaterial({ color: C.cyan, transparent: true, opacity: .32, side: THREE.DoubleSide, depthWrite: false });
   const playerRing = new THREE.Mesh(new THREE.RingGeometry(.40, .415, 40), ringMaterial); playerRing.rotation.x = -Math.PI / 2; playerRing.position.y = .035; player.add(playerRing);
@@ -327,33 +332,30 @@ export async function makeWorld(scene, renderer, progress, zoneId = 'logistics')
   function setWet(value) { wet = value; mirror.material.uniforms.wetness.value = value; road.roughness = .93 - value * .52; mirror.visible = value > 0 && !base; }
   function setLight(value) { sun.intensity = 1.2 + value * 3.1; ambient.intensity = .65 + value * .6; scene.environmentIntensity = .22 + value * .37; for (const { light, intensity } of lamps) light.intensity = intensity * (1.1 - value * .4); }
   setWet(.75); setLight(.45);
-  let lastAction = 'Idle';
-  function update(s, dt, elapsed, moving, running) {
+  function update(s, dt, elapsed, moving, running, motion = { x: s.x, y: s.y || 0, z: s.z, speed: moving ? running ? 4.4 : 2.65 : 0, climbSpeed: moving && s.climb ? 2.2 : 0, active: true }) {
     buildingView?.update(s, dt);
     for (const animate of animations) animate(elapsed);
-    player.position.set(s.x, s.y || 0, s.z);
-    const heading = Math.atan2(s.dx, s.dz); const target = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), heading);
-    player.quaternion.slerp(target, 1 - Math.exp(-12 * dt));
-    const action = s.grounded === false ? 'Idle' : moving ? running || s.dash > 0 ? 'Run' : 'Walk' : 'Idle';
-    if (action !== lastAction) { actions[lastAction]?.fadeOut(.22); actions[action]?.reset().setEffectiveWeight(1).fadeIn(.22).play(); lastAction = action; }
-    mixer.update(dt); mirror.material.uniforms.time.value = elapsed;
+    player.position.set(motion.x, motion.y, motion.z);
+    facing.setFromAxisAngle(facingAxis, Math.atan2(s.dx, s.dz));
+    player.quaternion.slerp(facing, 1 - Math.exp(-12 * dt));
+    if (motion.active) {
+    // Restore our additive offsets even when the mixer skips an unchanged bone track.
+    if (offsetApplied) { for (const p of poseRestore) p.bone.quaternion.copy(p.quaternion); offsetApplied = false; }
+    animator.update(s, motion, dt);
     // Temporary additive jump/landing pose on the existing rig, not a new authored clip.
-    const tuck = s.grounded === false ? .48 + (s.vy > 0 ? .15 : 0) : Math.min(1, (s.landTimer || 0) / .16) * .3;
+    const tuck = (s.climb ? 0 : s.grounded === false ? .48 + (s.vy > 0 ? .15 : 0) : Math.min(1, (s.landTimer || 0) / .16) * .3) * (1 - animator.climbWeight);
     if (tuck) {
+      for (const p of poseRestore) p.quaternion.copy(p.bone.quaternion);
+      offsetApplied = true;
       for (const name of ['LeftUpLeg', 'RightUpLeg']) if (poseBones[name]) poseBones[name].rotation.x -= tuck;
       for (const name of ['LeftLeg', 'RightLeg']) if (poseBones[name]) poseBones[name].rotation.x += tuck * 1.7;
       if (poseBones.LeftArm) poseBones.LeftArm.rotation.z -= tuck * .45;
       if (poseBones.RightArm) poseBones.RightArm.rotation.z += tuck * .45;
     }
-    if (s.climb) {
-      const cycle = moving ? Math.sin(elapsed * 7) : 0;
-      if (poseBones.LeftArm) poseBones.LeftArm.rotation.z -= 1.7 + cycle * .18;
-      if (poseBones.RightArm) poseBones.RightArm.rotation.z += 1.7 - cycle * .18;
-      if (poseBones.LeftUpLeg) poseBones.LeftUpLeg.rotation.x -= .25 + cycle * .2;
-      if (poseBones.RightUpLeg) poseBones.RightUpLeg.rotation.x -= .25 - cycle * .2;
     }
+    mirror.material.uniforms.time.value = elapsed;
     const ground = supportAt(s.x, s.z, s.y || 0, s.zone, s);
-    playerRing.position.y = (ground?.y || 0) - (s.y || 0) + .035;
+    playerRing.position.y = (ground?.y || 0) - motion.y + .035;
     playerRing.scale.setScalar(s.grounded === false ? 1.15 : 1);
     handGlow.intensity = s.attackPose > 0 ? 5 : 1.4;
     for (const e of echoes) {
@@ -371,7 +373,7 @@ export async function makeWorld(scene, renderer, progress, zoneId = 'logistics')
   }
   return { player, mirror, sun, compare, setWet, setLight, setGraphics, update, rendererStats: { staticBatches: groups.size },
     dispose() {
-      mixer.stopAllAction(); mixer.uncacheRoot(soldier.scene); mirror.getRenderTarget().dispose(); env.dispose();
+      animator.dispose(soldier.scene); mirror.getRenderTarget().dispose(); env.dispose();
       // Comparison mode detaches maps, so the generic scene disposer cannot see them.
       if (base) {
         const detached = new Set(snapshots.flatMap(saved => Object.values(saved).filter(value => value?.isTexture)));

@@ -12,6 +12,7 @@ import { makeWorld } from './world.js';
 import { initialState, tick, nearby, interact, shield, dash, jump } from './simulation.js';
 import { recoverPosition } from './collision-world.js';
 import { SimulationClock } from './simulation-clock.js';
+import { MotionPresentation } from './motion-presentation.js';
 import { traversalNearby, interactTraversal, releaseClimb, insideBuilding } from './traversal.js';
 import { findPath, followPath } from './navigation.js';
 import { attack, facePoint, updateCombat } from './combat.js';
@@ -29,6 +30,7 @@ try { graphics = graphicsOptions(JSON.parse(localStorage.getItem('slr.graphics.v
 $('quality').value = graphics.quality; $('frame-limit').value = String(graphics.fps);
 const pacer = new FramePacer();
 const simulationClock = new SimulationClock();
+const motionPresentation = new MotionPresentation();
 const scene = new THREE.Scene();
 const state = initialState('plaza', true);
 let campaign = newCampaign(), saveBlocked = false;
@@ -62,7 +64,7 @@ composer.addPass(sao);
 const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), .17, .5, 1.65); composer.addPass(bloom); composer.addPass(new OutputPass());
 let world, combatView, questView, transitioning = false, ready = false, started = false, photo = false, base = false, elapsed = 0, fpsTime = 0, frames = 0;
 let attacking = false, aimValid = false;
-let toastTimer = 0, shadowTimer = 0;
+let toastTimer = 0, shadowTimer = 0, hudTimer = 0;
 const keys = new Set();
 const settings = $('settings');
 const defeat = $('defeat');
@@ -361,13 +363,14 @@ canvas.addEventListener('pointerdown', event => {
 });
 canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); ready = false; $('loading').classList.remove('hide'); $('load-label').textContent = '그래픽 연결이 끊겼습니다. 페이지를 새로 고쳐 다시 연결해 주세요.'; });
 const forward = new THREE.Vector3(), side = new THREE.Vector3(), target = new THREE.Vector3(), projected = new THREE.Vector3();
-function hud() {
+function hud(updateData = true) {
   const zone = zoneFor(state.zone), bounds = zone.bounds;
+  document.body.classList.toggle('hit-flash', state.hurtFlash > 0);
+  if (updateData) {
   $('movement-status').textContent = `${state.climb ? '외벽 등반' : insideBuilding(state) ? '훈련동 실내' : state.grounded ? state.landTimer > .05 ? '착지' : '접지' : state.vy > 0 ? '상승' : '낙하'} · ${state.y.toFixed(1)}m`;
   $('hp').textContent = `${state.hp} / 120`; $('hp-fill').style.width = `${state.hp / 120 * 100}%`;
   $('guard-status').textContent = state.shield > 0 ? `방벽 ${state.shieldHp} · ${state.shield.toFixed(1)}초` : state.shieldCooldown > 0 ? `Q 재충전 ${state.shieldCooldown.toFixed(1)}초` : 'Q 잔금막 준비 · 에너지 20';
   $('combat-count').textContent = zone.safe ? `보유 ${campaign.credits} C · 주요 미션 ${campaign.completed.length}/3 완료` : state.exploring ? '탐방 중에는 미션·의뢰·보상이 진행되지 않습니다.' : `남은 위협 ${state.enemies.filter(e => e.hp > 0).length} · 구조 ${state.rescued}명`;
-  document.body.classList.toggle('hit-flash', state.hurtFlash > 0);
   $('energy').innerHTML = `${state.energy}<span> / 100</span>`; $('energy-fill').style.width = state.energy + '%';
   const count = state.recovered.filter(Boolean).length; $('progress-count').innerHTML = zone.training ? `${state.y.toFixed(1)} <i>m · 현재 높이</i>` : zone.safe ? '광장 <i>안전 구역</i>' : `0${count} <i>/ 0${zone.nodes.length}</i>`;
   document.querySelectorAll('.mission-progress>div i').forEach((el, i) => el.classList.toggle('done', i < count));
@@ -375,6 +378,7 @@ function hud() {
   $('map-player')?.setAttribute('transform', `translate(${10 + (state.x - bounds.minX) / (bounds.maxX - bounds.minX) * 130} ${10 + (state.z - bounds.minZ) / (bounds.maxZ - bounds.minZ) * 140}) rotate(${Math.atan2(state.dx, -state.dz) * 180 / Math.PI})`);
   $('objective').textContent = state.dead ? '출동 중단. 다시 시도하세요.' : zone.training ? state.climb ? '외벽을 따라 옥상까지 올라가 보세요.' : insideBuilding(state) ? '정비실 오른쪽 계단으로 옥상에 올라가세요.' : '발판 · 실내 훈련동 · 외벽을 탐험하세요.' : zone.safe ? '동료와 대화하고 출동을 준비하세요.' : objectiveText(state);
   $('mission-note').textContent = zone.training ? state.climb ? 'W/S 오르내리기 · A/D 좌우\nSpace / E 놓기 · 높은 낙하 주의' : 'E 문 / 외벽 · WASD 계단 이동\nSpace 점프 · C 회피 · ⌂ 귀환' : zone.safe ? 'J 임무·퀘스트 · E 대화' : state.exploring ? 'P 촬영 모드 · 우측 위 ⌂ 광장 복귀' : state.missionPhase === 'supports' ? 'Q 지지점 설치 · E 구조 장비 충전' : state.missionPhase === 'evacuate' ? '대피 중 · 추가 위협을 처리하세요' : 'E 조사·회수 · J 목표 확인';
+  }
   const near = currentInteraction();
   $('prompt').classList.toggle('hidden', !near || !started || photo || !!state.climb || settings.open || journal.open || returnDialog.open || resultDialog.open || designsDialog.open);
   if (near) {
@@ -386,15 +390,16 @@ function hud() {
 }
 function render(now) {
   requestAnimationFrame(render);
-  if (!ready || document.hidden) { pacer.reset(); simulationClock.reset(); fpsTime = 0; frames = 0; return; }
+  if (!ready || document.hidden) { pacer.reset(); simulationClock.reset(); motionPresentation.reset(state); fpsTime = 0; frames = 0; return; }
   const paused = !started || settings.open || journal.open || returnDialog.open || resultDialog.open || designsDialog.open || state.dead;
   const frameSeconds = pacer.step(now, paused ? Math.min(30, graphics.fps) : graphics.fps);
   if (frameSeconds === null) return;
-  const dt = Math.min(.05, frameSeconds);
+  const dt = Math.min(.1, frameSeconds);
   elapsed += dt; let moving = false;
   const active = started && !photo && !settings.open && !journal.open && !returnDialog.open && !resultDialog.open && !designsDialog.open && !state.dead;
   simulationClock.advance(frameSeconds, active, step => {
     if (state.dead) return;
+    motionPresentation.beforeStep(state);
     camera.getWorldDirection(forward); forward.y = 0; forward.normalize(); side.crossVectors(forward, new THREE.Vector3(0, 1, 0)).normalize();
     const vertical = Number(keys.has('KeyW')) - Number(keys.has('KeyS')), horizontal = Number(keys.has('KeyD')) - Number(keys.has('KeyA'));
     const running = keys.has('ShiftLeft') || keys.has('ShiftRight');
@@ -404,6 +409,7 @@ function render(now) {
       cancelMove();
       moving = tick(state, step, { x: forward.x * vertical + side.x * horizontal, z: forward.z * vertical + side.z * horizontal }, running) || moving;
     } else moving = followPath(state, path, step, running) || moving;
+    motionPresentation.afterStep(state, step);
     if (state.landingEvent) {
       combatView.play([state.landingEvent]);
       if (state.landingEvent.damage) toast(`낙하 ${state.landingEvent.height.toFixed(1)}m · 피해 ${state.landingEvent.damage}`);
@@ -414,20 +420,21 @@ function render(now) {
     const storyEvent = advanceMission(state, step); if (storyEvent) toast(storyEvent);
     if (state.dead && !defeat.open) { cancelMove(); keys.clear(); attacking = false; defeat.showModal(); $('retry').focus(); }
   });
+  const motion = motionPresentation.sample(state, simulationClock.remainder * 60, active && !state.dead);
   moveMarker.visible = path.length > 0 && active;
   moveMarker.scale.lerp(new THREE.Vector3(1, 1, 1), 1 - Math.exp(-8 * dt));
   if (!photo) {
-    desiredTarget.set(state.x, 1.1 + state.y, state.z - 3.5);
+    desiredTarget.set(motion.x, 1.1 + motion.y, motion.z - 3.5);
     target.copy(controls.target).lerp(desiredTarget, 1 - Math.exp(-4 * dt));
     camera.position.add(target.clone().sub(controls.target)); controls.target.copy(target);
   }
   controls.update();
-  world.update(state, dt, elapsed, moving, keys.has('ShiftLeft') || keys.has('ShiftRight'));
+  world.update(state, dt, elapsed, moving, keys.has('ShiftLeft') || keys.has('ShiftRight'), motion);
   combatView.update(state, dt, elapsed, started && !photo);
   questView.update(state, campaign, dt, started && !photo);
   shadowTimer += dt;
   if (shadowTimer >= 1 / graphicsPresets[graphics.quality].shadowHz) { renderer.shadowMap.needsUpdate = true; shadowTimer = 0; }
-  composer.render(); hud();
+  composer.render(); hudTimer += dt; hud(hudTimer >= .05); if (hudTimer >= .05) hudTimer = 0;
   fpsTime += frameSeconds; frames++;
   if (fpsTime >= 1) { $('fps').textContent = `${Math.round(frames / fpsTime)} FPS · ${graphicsPresets[graphics.quality].label}${paused ? ' · 메뉴 30' : ''}`; frames = 0; fpsTime = 0; }
 }
@@ -454,6 +461,7 @@ async function enterZone(zoneId, exploring = false) {
   $('loading').classList.remove('hide'); $('loading').removeAttribute('aria-hidden'); $('load-fill').style.width = '5%'; $('load-label').textContent = zone.name + ' 진입 중';
   try {
     releaseScene(); Object.assign(state, initialState(zoneId, true)); state.exploring = exploring;
+    motionPresentation.reset(state); hudTimer = 1;
     if (exploring) { state.enemies = []; state.props = []; state.missionPhase = 'explore'; }
     world = await makeWorld(scene, renderer, percent => { $('load-fill').style.width = Math.round(percent * 90) + '%'; }, zoneId);
     combatView = createCombatView(scene, camera, state); combatView.update(state, 0, 0, false);

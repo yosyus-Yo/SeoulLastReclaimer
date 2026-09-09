@@ -51,7 +51,7 @@ export function createCombatView(scene, camera, state) {
     const label = document.createElement('div'); label.className = 'enemy-label'; label.id = 'target-' + target.id;
     label.innerHTML = `<span>${target.isBoss ? '앵커 융합체' : target.kind === 'chaser' ? '균열 추적체' : target.kind === 'ranged' ? '잔류 포격체' : '잔향 용기'}</span><b></b><div><i></i></div>`;
     labelRoot.append(label);
-    models.set(target.id, { root, body, core, warning, label, outline });
+    models.set(target.id, { root, body, core, warning, label, outline, healthText: label.querySelector('b'), healthBar: label.querySelector('i'), lastHp: null, lastMaxHp: null, lastWarning: false });
   }
   for (const target of [...state.enemies, ...state.props]) makeModel(target);
   const aid = new THREE.Group(); aid.position.set(firstAid.x, 0, firstAid.z); scene.add(aid);
@@ -60,14 +60,23 @@ export function createCombatView(scene, camera, state) {
   block(aid, aidMat, 0, .3, 0, .65, .45, .5); block(aid, cross, 0, .532, 0, .34, .015, .09); block(aid, cross, 0, .532, 0, .09, .015, .34);
   const aidLabel = document.createElement('div'); aidLabel.className = 'enemy-label aid-label'; aidLabel.textContent = 'E 구급함 · 체력 +50'; labelRoot.append(aidLabel);
   const v = new THREE.Vector3();
+  const labelPositions = new WeakMap();
   function project(label, x, y, z, show = true) {
+    if (!show) { if (!label.hidden) label.hidden = true; return; }
     v.set(x, y, z).project(camera);
-    label.hidden = !show || v.z < -1 || v.z > 1 || Math.abs(v.x) > .96 || Math.abs(v.y) > .9;
-    label.style.left = `${(v.x * .5 + .5) * innerWidth}px`; label.style.top = `${(-v.y * .5 + .5) * innerHeight}px`;
+    const hidden = v.z < -1 || v.z > 1 || Math.abs(v.x) > .96 || Math.abs(v.y) > .9;
+    if (label.hidden !== hidden) label.hidden = hidden;
+    if (hidden) return;
+    const left = Math.round((v.x * .5 + .5) * innerWidth * 10) / 10, top = Math.round((-v.y * .5 + .5) * innerHeight * 10) / 10;
+    let position = labelPositions.get(label);
+    if (!position) { position = {}; labelPositions.set(label, position); }
+    if (position.left !== left) { label.style.left = `${left}px`; position.left = left; }
+    if (position.top !== top) { label.style.top = `${top}px`; position.top = top; }
   }
   function update(s, dt, elapsed, enabled) {
-    labelRoot.hidden = !enabled;
-    for (const t of [...s.enemies, ...s.props]) {
+    if (labelRoot.hidden !== !enabled) labelRoot.hidden = !enabled;
+    for (let index = 0; index < s.enemies.length + s.props.length; index++) {
+      const t = index < s.enemies.length ? s.enemies[index] : s.props[index - s.enemies.length];
       if (!models.has(t.id)) makeModel(t);
       const m = models.get(t.id); m.root.position.set(t.x, 0, t.z); m.root.userData.alive = t.hp > 0;
       m.root.scale.setScalar((t.hp > 0 ? 1 : .55) * (t.isBoss ? 1.6 : 1)); m.root.rotation.z = t.hp > 0 ? 0 : Math.PI * .45;
@@ -86,19 +95,26 @@ export function createCombatView(scene, camera, state) {
         }
       }
       const max = t.maxHp || 40;
-      m.label.querySelector('b').textContent = `${t.hp}/${max}`;
-      m.label.querySelector('i').style.width = `${t.hp / max * 100}%`;
-      m.label.classList.toggle('warning', t.phase === 'telegraph');
-      project(m.label, t.x, t.kind ? 1.9 : 1.3, t.z, t.hp > 0 && Math.hypot(t.x - s.x, t.z - s.z) < 11);
+      if (enabled) {
+        if (m.lastHp !== t.hp || m.lastMaxHp !== max) {
+          m.healthText.textContent = `${t.hp}/${max}`;
+          m.healthBar.style.width = `${t.hp / max * 100}%`;
+          m.lastHp = t.hp; m.lastMaxHp = max;
+        }
+        const warning = t.phase === 'telegraph';
+        if (m.lastWarning !== warning) { m.label.classList.toggle('warning', warning); m.lastWarning = warning; }
+        project(m.label, t.x, t.kind ? 1.9 : 1.3, t.z, t.hp > 0 && Math.hypot(t.x - s.x, t.z - s.z) < 11);
+      }
     }
+    for (const m of dropModels.values()) m.visible = false;
     for (const d of s.drops) {
       if (!dropModels.has(d.id)) {
         const mesh = new THREE.Mesh(new THREE.OctahedronGeometry(.19), energyMat); scene.add(mesh); dropModels.set(d.id, mesh);
       }
       const m = dropModels.get(d.id); m.visible = d.amount > 0; m.position.set(d.x, .42 + Math.sin(elapsed * 4) * .08, d.z); m.rotation.set(elapsed, elapsed * .8, .3);
     }
-    for (const [id, m] of dropModels) if (!s.drops.some(d => d.id === id)) m.visible = false;
-    aid.visible = !s.aidUsed && !zoneFor(s.zone).training; project(aidLabel, firstAid.x, 1.2, firstAid.z, aid.visible && Math.hypot(firstAid.x - s.x, firstAid.z - s.z) < 7);
+    aid.visible = !s.aidUsed && !zoneFor(s.zone).training;
+    if (enabled) project(aidLabel, firstAid.x, 1.2, firstAid.z, aid.visible && Math.hypot(firstAid.x - s.x, firstAid.z - s.z) < 7);
     for (let i = effects.length - 1; i >= 0; i--) {
       const e = effects[i]; e.life -= dt;
       if (e.expand) e.mesh.scale.addScalar(dt * 3);
@@ -106,7 +122,8 @@ export function createCombatView(scene, camera, state) {
       if (e.life <= 0) { scene.remove(e.mesh); e.mesh.geometry.dispose(); e.mesh.material.dispose(); effects.splice(i, 1); }
     }
     for (let i = numbers.length - 1; i >= 0; i--) {
-      const n = numbers[i]; n.life -= dt; project(n.label, n.x, 1.8 + (1 - n.life) * .6, n.z); n.label.style.opacity = Math.max(0, n.life);
+      const n = numbers[i]; n.life -= dt;
+      if (enabled) { project(n.label, n.x, 1.8 + (1 - n.life) * .6, n.z); n.label.style.opacity = Math.max(0, n.life); }
       if (n.life <= 0) { n.label.remove(); numbers.splice(i, 1); }
     }
   }

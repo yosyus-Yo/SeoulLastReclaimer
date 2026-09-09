@@ -40,6 +40,7 @@ export async function createQuestView(scene, camera, zoneId) {
   for (const route of zone.climbRoutes || []) { marker(route.bottom, 'climb', 'E 외벽에 붙기', route.id); marker(route.top, 'climb', 'E 외벽 내려가기', route.id); }
   for (const q of sideQuests) if (q.zone === zoneId) for (const p of q.points) {
     const e = marker(p, 'item', q.id === 'SQ04' ? 'E 배전함 복구' : 'E ' + q.name, p.id);
+    e.quest = q;
     if (q.id === 'SQ04') { e.powerLight = new THREE.PointLight(0xffdfa9, 0, 9); e.powerLight.position.y = 3; e.group.add(e.powerLight); }
   }
   for (let i = 0; i < zone.supports.length; i++) marker(zone.supports[i], 'support', 'Q 지지점 ' + (i + 1), String(i));
@@ -49,11 +50,11 @@ export async function createQuestView(scene, camera, zoneId) {
   const projected = new THREE.Vector3();
   function update(state, campaign, dt, shown) {
     npcSprites.update(dt);
-    labels.hidden = !shown;
+    if (labels.hidden !== !shown) labels.hidden = !shown;
     for (const e of entries) {
       let visible = true, text = e.text;
       if (e.kind === 'item') {
-        const q = sideQuests.find(q => q.points.some(p => p.id === e.id));
+        const q = e.quest;
         const taken = campaign.pickups.includes(e.id);
         visible = campaign.sideAccepted.includes(q.id) && !taken;
         if (q.id === 'SQ04' && taken) { visible = true; text = '복구 완료'; }
@@ -67,9 +68,19 @@ export async function createQuestView(scene, camera, zoneId) {
       if (e.kind === 'climb' && state.climb) visible = false;
       if (state.exploring && !['exit', 'door', 'climb'].includes(e.kind)) visible = false;
       e.group.visible = visible;
-      projected.set(e.point.x, (e.point.y || 0) + (e.kind === 'support' ? 2.5 : 2), e.point.z).project(camera);
-      e.label.hidden = !visible || projected.z < -1 || projected.z > 1 || Math.abs(projected.x) > .95 || Math.abs(projected.y) > .88 || Math.hypot(state.x - e.point.x, state.z - e.point.z) > 14;
-      e.label.textContent = text; e.label.style.left = `${(projected.x * .5 + .5) * innerWidth}px`; e.label.style.top = `${(-projected.y * .5 + .5) * innerHeight}px`;
+      if (!shown) continue;
+      let hidden = !visible || Math.hypot(state.x - e.point.x, state.z - e.point.z) > 14;
+      if (!hidden) {
+        projected.set(e.point.x, (e.point.y || 0) + (e.kind === 'support' ? 2.5 : 2), e.point.z).project(camera);
+        hidden = projected.z < -1 || projected.z > 1 || Math.abs(projected.x) > .95 || Math.abs(projected.y) > .88;
+      }
+      if (e.label.hidden !== hidden) e.label.hidden = hidden;
+      if (hidden) continue;
+      if (e.lastText !== text) { e.label.textContent = text; e.lastText = text; }
+      // Retain frame-rate projection while avoiding unchanged layout writes.
+      const left = Math.round((projected.x * .5 + .5) * innerWidth * 10) / 10, top = Math.round((-projected.y * .5 + .5) * innerHeight * 10) / 10;
+      if (e.lastLeft !== left) { e.label.style.left = `${left}px`; e.lastLeft = left; }
+      if (e.lastTop !== top) { e.label.style.top = `${top}px`; e.lastTop = top; }
     }
     for (let i = 0; i < people.length; i++) {
       const p = people[i]; p.visible = state.missionPhase !== 'scan';
